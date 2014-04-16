@@ -14,7 +14,7 @@ Features
   * textColor
   * font
   * popUpViewColor
-  * popUpViewAnimatedColors - popUpView and UISlider track color animate as value changes
+  * popUpViewAnimatedColors - popUpView and progress bar color animate as value changes
 * Wholesome springy animation
 
 
