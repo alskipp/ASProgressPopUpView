@@ -23,7 +23,7 @@
 {
     [super viewDidLoad];
     self.progressView.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:26];
-    self.progressView.popUpViewAnimatedColors = @[[UIColor purpleColor], [UIColor redColor], [UIColor orangeColor]];
+    self.progressView.popUpViewAnimatedColors = @[[UIColor redColor], [UIColor orangeColor], [UIColor greenColor]];
 }
 
 - (void)didReceiveMemoryWarning
