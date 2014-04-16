@@ -214,12 +214,13 @@ NSString *const FillColorAnimation = @"fillColor";
     UIBezierPath *roundedRectPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:4.0];
     
     // Create arrow path
+    CGFloat maxX = CGRectGetMaxX(roundedRect); // prevent arrow from extending beyond this point
     UIBezierPath *arrowPath = [UIBezierPath bezierPath];
     CGFloat arrowX = CGRectGetMidX(self.bounds) + _arrowCenterOffset;
     CGPoint p0 = CGPointMake(arrowX, CGRectGetMaxY(self.bounds));
     [arrowPath moveToPoint:p0];
-    [arrowPath addLineToPoint:CGPointMake((arrowX - 6.0), CGRectGetMaxY(roundedRect))];
-    [arrowPath addLineToPoint:CGPointMake((arrowX + 6.0), CGRectGetMaxY(roundedRect))];
+    [arrowPath addLineToPoint:CGPointMake(MAX(arrowX - 8.0, 0), CGRectGetMaxY(roundedRect)-4)];
+    [arrowPath addLineToPoint:CGPointMake(MIN(arrowX + 8.0, maxX), CGRectGetMaxY(roundedRect)-4)];
     [arrowPath closePath];
     
     // combine arrow path and rounded rect
