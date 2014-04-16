@@ -10,6 +10,7 @@
 #import "ASProgressPopupView.h"
 
 static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
+static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 @interface ASProgressPopupView() <ASPopUpViewDelegate>
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
@@ -150,6 +151,11 @@ static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
             [self.popUpView hide];
             _popUpViewIsVisible = NO;
         }
+        
+    } else if (context == ASProgressViewBoundsContext) {
+        if (_popUpViewIsVisible) [self positionAndUpdatePopUpView];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
@@ -160,10 +166,13 @@ static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
     _autoAdjustTrackColor = YES;
     _popUpViewIsVisible = NO;
     
-    [self addObserver:self
-           forKeyPath:@"progress"
+    [self addObserver:self forKeyPath:@"progress"
               options:NSKeyValueObservingOptionNew
               context:ASProgressPopupViewContext];
+    
+    [self addObserver:self forKeyPath:@"bounds"
+              options:NSKeyValueObservingOptionNew
+              context:ASProgressViewBoundsContext];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(willEnterForegroundNotification:)
