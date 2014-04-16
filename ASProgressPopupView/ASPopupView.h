@@ -7,8 +7,8 @@
 //
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// This UIView subclass is used internally by ASValueTrackingSlider
-// The public API is declared in ASValueTrackingSlider.h
+// This UIView subclass is used internally by ASProgressPopupView
+// The public API is declared in ASProgressPopupView.h
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import <UIKit/UIKit.h>

@@ -21,14 +21,14 @@
 // this will vary if 'popUpViewAnimatedColors' is set (see below)
 @property (strong, nonatomic) UIColor *popUpViewColor;
 
-// pass an array of  2 or more UIColors to animate the color change as the slider moves
+// pass an array of 2 or more UIColors to animate the color change as the progress updates
 @property (strong, nonatomic) NSArray *popUpViewAnimatedColors;
 
-// the above @property distributes the colors evenly across the slider
-// to specify the exact position of colors on the slider scale, pass an NSArray of NSNumbers
+// the above @property distributes the colors evenly across the progress view
+// to specify the exact position of colors, pass an NSArray of NSNumbers (in the range 0.0 - 1.0)
 - (void)setPopUpViewAnimatedColors:(NSArray *)popUpViewAnimatedColors withPositions:(NSArray *)positions;
 
-// changes the left handside of the UISlider track to match current popUpView color
+// changes the progress track to match current popUpView color
 // the track color alpha is always set to 1.0, even if popUpView color is less than 1.0
 @property (nonatomic) BOOL autoAdjustTrackColor; // (default is YES)
 
@@ -38,26 +38,26 @@
 // you need to ensure that the cell it resides in is brought to the front of the view hierarchy
 // to prevent the popUpView from being obscured
 @protocol ASProgressPopupViewDelegate <NSObject>
-- (void)sliderWillDisplayPopUpView:(ASProgressPopupView *)slider;
+- (void)progressViewWillDisplayPopupView:(ASProgressPopupView *)progressView;
 
 @optional
-- (void)sliderDidHidePopUpView:(ASProgressPopupView *)slider;
+- (void)progressViewDidHidePopupView:(ASProgressPopupView *)progressView;
 @end
 
 /*
 // the recommended technique for use with a tableView is to create a UITableViewCell subclass ↓
  
- @interface SliderCell : UITableViewCell <ASProgressPopupViewDelegate>
- @property (weak, nonatomic) IBOutlet ASProgressPopupView *slider;
+ @interface ProgressCell : UITableViewCell <ASProgressPopupViewDelegate>
+ @property (weak, nonatomic) IBOutlet ASProgressPopupView *progressView;
  @end
  
- @implementation SliderCell
+ @implementation ProgressCell
  - (void)awakeFromNib
  {
-    self.slider.delegate = self;
+    self.progressView.delegate = self;
  }
  
- - (void)sliderWillDisplayPopUpView:(ASProgressPopupView *)slider;
+ - (void)progressViewWillDisplayPopupView:(ASProgressPopupView *)progressView;
  {
     [self.superview bringSubviewToFront:self];
  }

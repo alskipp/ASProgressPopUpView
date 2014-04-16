@@ -1,6 +1,6 @@
 //
 //  ASProgressPopupView.h
-//  ValueTrackingSlider
+//  ASProgressPopupView
 //
 //  Created by Alan Skipp on 19/10/2013.
 //  Copyright (c) 2013 Alan Skipp. All rights reserved.
@@ -76,7 +76,7 @@ static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
 }
 
 // return the currently displayed color if possible, otherwise return _popUpViewColor
-// if animated colors are set, the color will change each time the slider value changes
+// if animated colors are set, the color will change each time the progress view updates
 - (UIColor *)popUpViewColor
 {
     return [self.popUpView color] ?: _popUpViewColor;
@@ -126,8 +126,8 @@ static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
 
 - (void)popUpViewDidHide;
 {
-    if ([self.delegate respondsToSelector:@selector(sliderDidHidePopUpView:)]) {
-        [self.delegate sliderDidHidePopUpView:self];
+    if ([self.delegate respondsToSelector:@selector(progressViewDidHidePopupView:)]) {
+        [self.delegate progressViewDidHidePopupView:self];
     }
 }
 
@@ -143,6 +143,7 @@ static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
         [self positionAndUpdatePopUpView];
         
         if (!_popUpViewIsVisible && self.progress > 0.0) {
+            [self.delegate progressViewWillDisplayPopupView:self];
             [self.popUpView show];
             _popUpViewIsVisible = YES;
         } else if (self.progress >= 1.0) {
@@ -210,7 +211,7 @@ static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
     popUpRect = CGRectMake(xPos, CGRectGetMinY(progressRect)-_popUpViewSize.height,
                            _popUpViewSize.width, _popUpViewSize.height);
 
-    // determine if popUpRect extends beyond the frame of the UISlider
+    // determine if popUpRect extends beyond the frame of the progress view
     // if so adjust frame and set the center offset of the PopUpView's arrow
     CGFloat minOffsetX = CGRectGetMinX(popUpRect);
     CGFloat maxOffsetX = CGRectGetMaxX(popUpRect) - self.bounds.size.width;
