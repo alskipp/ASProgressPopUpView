@@ -207,9 +207,8 @@ static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
     CGRect progressRect = self.bounds;
     CGFloat xPos = (CGRectGetWidth(progressRect) * self.progress) - _popUpViewSize.width/2;
     
-    CGRect popUpRect;
-    popUpRect = CGRectMake(xPos, CGRectGetMinY(progressRect)-_popUpViewSize.height,
-                           _popUpViewSize.width, _popUpViewSize.height);
+    CGRect popUpRect = CGRectMake(xPos, CGRectGetMinY(progressRect)-_popUpViewSize.height,
+                                  _popUpViewSize.width, _popUpViewSize.height);
 
     // determine if popUpRect extends beyond the frame of the progress view
     // if so adjust frame and set the center offset of the PopUpView's arrow
