@@ -21,6 +21,8 @@
 		E72C353D18FEC3A800D814BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72C351F18FEC3A800D814BA /* UIKit.framework */; };
 		E72C354518FEC3A800D814BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E72C354318FEC3A800D814BA /* InfoPlist.strings */; };
 		E72C354718FEC3A800D814BA /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E72C354618FEC3A800D814BA /* ExampleTests.m */; };
+		E72C356C18FEE0C300D814BA /* ASProgressPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E72C356B18FEE0C300D814BA /* ASProgressPopupView.m */; };
+		E72C356F18FEF6BC00D814BA /* ASPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E72C356E18FEF6BC00D814BA /* ASPopupView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,10 @@
 		E72C354218FEC3A800D814BA /* ExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ExampleTests-Info.plist"; sourceTree = "<group>"; };
 		E72C354418FEC3A800D814BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E72C354618FEC3A800D814BA /* ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExampleTests.m; sourceTree = "<group>"; };
+		E72C356A18FEE0C300D814BA /* ASProgressPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASProgressPopupView.h; path = ../ASProgressPopupView/ASProgressPopupView.h; sourceTree = "<group>"; };
+		E72C356B18FEE0C300D814BA /* ASProgressPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASProgressPopupView.m; path = ../ASProgressPopupView/ASProgressPopupView.m; sourceTree = "<group>"; };
+		E72C356D18FEF6BC00D814BA /* ASPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASPopupView.h; path = ../ASProgressPopupView/ASPopupView.h; sourceTree = "<group>"; };
+		E72C356E18FEF6BC00D814BA /* ASPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASPopupView.m; path = /Users/alan/Documents/programming/iOS/ASProgressPopupView/ASProgressPopupView/ASPopupView.m; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +90,7 @@
 			children = (
 				E72C352118FEC3A800D814BA /* Example */,
 				E72C354018FEC3A800D814BA /* ExampleTests */,
+				E72C355718FEDC1300D814BA /* Vendor */,
 				E72C351A18FEC3A800D814BA /* Frameworks */,
 				E72C351918FEC3A800D814BA /* Products */,
 			);
@@ -150,6 +157,17 @@
 				E72C354318FEC3A800D814BA /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E72C355718FEDC1300D814BA /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				E72C356D18FEF6BC00D814BA /* ASPopupView.h */,
+				E72C356E18FEF6BC00D814BA /* ASPopupView.m */,
+				E72C356A18FEE0C300D814BA /* ASProgressPopupView.h */,
+				E72C356B18FEE0C300D814BA /* ASProgressPopupView.m */,
+			);
+			name = Vendor;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,8 +267,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E72C356C18FEE0C300D814BA /* ASProgressPopupView.m in Sources */,
 				E72C353218FEC3A800D814BA /* ViewController.m in Sources */,
 				E72C352C18FEC3A800D814BA /* AppDelegate.m in Sources */,
+				E72C356F18FEF6BC00D814BA /* ASPopupView.m in Sources */,
 				E72C352818FEC3A800D814BA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

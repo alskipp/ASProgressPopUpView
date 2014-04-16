@@ -7,9 +7,10 @@
 //
 
 #import "ViewController.h"
+#import "ASProgressPopupView.h"
 
 @interface ViewController ()
-@property (weak, nonatomic) IBOutlet UIProgressView *progressView;
+@property (weak, nonatomic) IBOutlet ASProgressPopupView *progressView;
 @property (weak, nonatomic) IBOutlet UIButton *progressButton;
 @end
 
@@ -21,13 +22,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    self.progressView.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:26];
+    self.progressView.popUpViewAnimatedColors = @[[UIColor purpleColor], [UIColor redColor], [UIColor orangeColor]];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (IBAction)startProgress:(UIButton *)sender
@@ -50,7 +51,7 @@
 
 - (void)increaseProgress:(NSTimer *)timer
 {
-    self.progressView.progress += 0.02;
+    self.progressView.progress += 0.01;
     if (self.progressView.progress >= 1.0) {
         [timer invalidate];
         self.progressButton.selected = NO;
