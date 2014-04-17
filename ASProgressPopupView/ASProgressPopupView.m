@@ -118,7 +118,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     }
 }
 
-#pragma mark - ASValuePopUpViewDelegate
+#pragma mark - ASPopUpViewDelegate
 
 - (void)colorAnimationDidStart;
 {
