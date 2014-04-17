@@ -138,27 +138,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     return self.progress;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (context == ASProgressPopupViewContext) {
-        [self positionAndUpdatePopUpView];
-        
-        if (!_popUpViewIsVisible && self.progress > 0.0) {
-            [self.delegate progressViewWillDisplayPopupView:self];
-            [self.popUpView show];
-            _popUpViewIsVisible = YES;
-        } else if (self.progress >= 1.0) {
-            [self.popUpView hide];
-            _popUpViewIsVisible = NO;
-        }
-        
-    } else if (context == ASProgressViewBoundsContext) {
-        if (_popUpViewIsVisible) [self positionAndUpdatePopUpView];
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
-}
-
 #pragma mark - private
 
 - (void)setup
@@ -249,6 +228,29 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     self.autoAdjustTrackColor = NO; // if a custom value is set then prevent auto coloring
     [super setProgressTintColor:color];
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context == ASProgressPopupViewContext) {
+        [self positionAndUpdatePopUpView];
+        
+        if (!_popUpViewIsVisible && self.progress > 0.0) {
+            [self.delegate progressViewWillDisplayPopupView:self];
+            [self.popUpView show];
+            _popUpViewIsVisible = YES;
+        } else if (self.progress >= 1.0) {
+            [self.popUpView hide];
+            _popUpViewIsVisible = NO;
+        }
+        
+    } else if (context == ASProgressViewBoundsContext) {
+        if (_popUpViewIsVisible) [self positionAndUpdatePopUpView];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 @end
