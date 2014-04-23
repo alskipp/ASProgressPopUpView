@@ -155,8 +155,8 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
               context:ASProgressViewBoundsContext];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(willEnterForegroundNotification:)
-                                                 name:UIApplicationWillEnterForegroundNotification
+                                             selector:@selector(didBecomeActiveNotification:)
+                                                 name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -175,7 +175,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 }
 
 // ensure animation restarts if app is closed then becomes active again
-- (void)willEnterForegroundNotification:(NSNotification *)note
+- (void)didBecomeActiveNotification:(NSNotification *)note
 {
     if (self.popUpViewAnimatedColors) {
         [self.popUpView setAnimatedColors:_popUpViewAnimatedColors withKeyTimes:_keyTimes];
