@@ -23,6 +23,8 @@ Features
 Which files are needed?
 ---
 
+For [CocoaPods](http://beta.cocoapods.org) users, simply add `pod 'ASProgressPopupView'` to your podfile. Don't forget, CocoaPods includes the `try` command, type `$ pod try ASProgressPopupView` in the terminal, CocoaPods will download the demo project into a temp folder and open it in Xcode. Magic.
+
 * ASProgressPopupView (.h .m)
 * ASPopupView (.h .m)
 
