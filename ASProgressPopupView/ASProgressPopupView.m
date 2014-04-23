@@ -146,19 +146,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     _autoAdjustTrackColor = YES;
     _popUpViewIsVisible = NO;
     
-    [self addObserver:self forKeyPath:@"progress"
-              options:NSKeyValueObservingOptionNew
-              context:ASProgressPopupViewContext];
-    
-    [self addObserver:self forKeyPath:@"bounds"
-              options:NSKeyValueObservingOptionNew
-              context:ASProgressViewBoundsContext];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didBecomeActiveNotification:)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:nil];
-    
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterPercentStyle];
     _numberFormatter = formatter;
@@ -223,20 +210,39 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     _popUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];
 }
 
+- (void)addObserversAndNotifications
+{
+    [self addObserver:self forKeyPath:@"progress"
+              options:NSKeyValueObservingOptionNew
+              context:ASProgressPopupViewContext];
+    
+    [self addObserver:self forKeyPath:@"bounds"
+              options:NSKeyValueObservingOptionNew
+              context:ASProgressViewBoundsContext];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didBecomeActiveNotification:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+}
+
+- (void)removeObserversAndNotifications
+{
+    [self removeObserver:self forKeyPath:@"progress"];
+    [self removeObserver:self forKeyPath:@"bounds"];
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark - subclassed
 
 - (void)didMoveToWindow
 {
-    if (!self.window) { // removed from window - cancel notifications
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIApplicationDidBecomeActiveNotification
-                                                      object:nil];
+    if (!self.window) { // removed from window - cancel observers and notifications
+        [self removeObserversAndNotifications];
     }
-    else { // added to window - register notifications and reset animated colors if needed
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(didBecomeActiveNotification:)
-                                                     name:UIApplicationDidBecomeActiveNotification
-                                                   object:nil];
+    else { // added to window - register observers, notifications and reset animated colors if needed
+        [self addObserversAndNotifications];
         if (self.popUpViewAnimatedColors) {
             [self.popUpView setAnimatedColors:_popUpViewAnimatedColors withKeyTimes:_keyTimes];
         }
