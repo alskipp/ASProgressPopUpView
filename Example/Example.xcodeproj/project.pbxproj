@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5ED83219190F6AB4006D2119 /* ASPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ED83218190F6AB4006D2119 /* ASPopupView.m */; };
 		E72C351C18FEC3A800D814BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72C351B18FEC3A800D814BA /* Foundation.framework */; };
 		E72C351E18FEC3A800D814BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72C351D18FEC3A800D814BA /* CoreGraphics.framework */; };
 		E72C352018FEC3A800D814BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72C351F18FEC3A800D814BA /* UIKit.framework */; };
@@ -22,7 +23,6 @@
 		E72C354518FEC3A800D814BA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E72C354318FEC3A800D814BA /* InfoPlist.strings */; };
 		E72C354718FEC3A800D814BA /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E72C354618FEC3A800D814BA /* ExampleTests.m */; };
 		E72C356C18FEE0C300D814BA /* ASProgressPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E72C356B18FEE0C300D814BA /* ASProgressPopupView.m */; };
-		E72C356F18FEF6BC00D814BA /* ASPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E72C356E18FEF6BC00D814BA /* ASPopupView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5ED83218190F6AB4006D2119 /* ASPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASPopupView.m; path = ../ASProgressPopupView/ASPopupView.m; sourceTree = "<group>"; };
 		E72C351818FEC3A800D814BA /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E72C351B18FEC3A800D814BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E72C351D18FEC3A800D814BA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -58,7 +59,6 @@
 		E72C356A18FEE0C300D814BA /* ASProgressPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASProgressPopupView.h; path = ../ASProgressPopupView/ASProgressPopupView.h; sourceTree = "<group>"; };
 		E72C356B18FEE0C300D814BA /* ASProgressPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASProgressPopupView.m; path = ../ASProgressPopupView/ASProgressPopupView.m; sourceTree = "<group>"; };
 		E72C356D18FEF6BC00D814BA /* ASPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASPopupView.h; path = ../ASProgressPopupView/ASPopupView.h; sourceTree = "<group>"; };
-		E72C356E18FEF6BC00D814BA /* ASPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASPopupView.m; path = /Users/alan/Documents/programming/iOS/ASProgressPopupView/ASProgressPopupView/ASPopupView.m; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,7 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				E72C356D18FEF6BC00D814BA /* ASPopupView.h */,
-				E72C356E18FEF6BC00D814BA /* ASPopupView.m */,
+				5ED83218190F6AB4006D2119 /* ASPopupView.m */,
 				E72C356A18FEE0C300D814BA /* ASProgressPopupView.h */,
 				E72C356B18FEE0C300D814BA /* ASProgressPopupView.m */,
 			);
@@ -270,7 +270,7 @@
 				E72C356C18FEE0C300D814BA /* ASProgressPopupView.m in Sources */,
 				E72C353218FEC3A800D814BA /* ViewController.m in Sources */,
 				E72C352C18FEC3A800D814BA /* AppDelegate.m in Sources */,
-				E72C356F18FEF6BC00D814BA /* ASPopupView.m in Sources */,
+				5ED83219190F6AB4006D2119 /* ASPopupView.m in Sources */,
 				E72C352818FEC3A800D814BA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -476,6 +476,7 @@
 				E72C354C18FEC3A800D814BA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E72C354D18FEC3A800D814BA /* Build configuration list for PBXNativeTarget "ExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -484,6 +485,7 @@
 				E72C354F18FEC3A800D814BA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
