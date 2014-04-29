@@ -1,18 +1,18 @@
 //
-//  ASProgressPopupView.m
-//  ASProgressPopupView
+//  ASProgressPopUpView.m
+//  ASProgressPopUpView
 //
 //  Created by Alan Skipp on 27/03/2014.
 //  Copyright (c) 2014 Alan Skipp. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-@protocol ASProgressPopupViewDelegate;
+@protocol ASProgressPopUpViewDelegate;
 
-@interface ASProgressPopupView : UIProgressView
+@interface ASProgressPopUpView : UIProgressView
 
 // delegate is only needed when used with a TableView or CollectionView - see below
-@property (weak, nonatomic) id<ASProgressPopupViewDelegate> delegate;
+@property (weak, nonatomic) id<ASProgressPopUpViewDelegate> delegate;
 @property (strong, nonatomic) UIColor *textColor;
 
 // font can not be nil, it must be a valid UIFont
@@ -36,25 +36,25 @@
 @property (nonatomic) BOOL autoAdjustTrackColor; // (default is YES)
 
 // default behaviour is to show the popupView when progress starts and hide it when it completes
-// if you prefer to always show the popup view then set 'showPopupViewAtStartAndEnd' to YES
-@property (nonatomic) BOOL alwaysShowPopupView;  // (default is NO)
+// if you prefer to always show the popup view then set 'showPopUpViewAtStartAndEnd' to YES
+@property (nonatomic) BOOL alwaysShowPopUpView;  // (default is NO)
 @end
 
-// when embedding an ASProgressPopupView inside a TableView or CollectionView
+// when embedding an ASProgressPopUpView inside a TableView or CollectionView
 // you need to ensure that the cell it resides in is brought to the front of the view hierarchy
 // to prevent the popUpView from being obscured
-@protocol ASProgressPopupViewDelegate <NSObject>
-- (void)progressViewWillDisplayPopupView:(ASProgressPopupView *)progressView;
+@protocol ASProgressPopUpViewDelegate <NSObject>
+- (void)progressViewWillDisplayPopUpView:(ASProgressPopUpView *)progressView;
 
 @optional
-- (void)progressViewDidHidePopupView:(ASProgressPopupView *)progressView;
+- (void)progressViewDidHidePopUpView:(ASProgressPopUpView *)progressView;
 @end
 
 /*
 // the recommended technique for use with a tableView is to create a UITableViewCell subclass ↓
  
- @interface ProgressCell : UITableViewCell <ASProgressPopupViewDelegate>
- @property (weak, nonatomic) IBOutlet ASProgressPopupView *progressView;
+ @interface ProgressCell : UITableViewCell <ASProgressPopUpViewDelegate>
+ @property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView;
  @end
  
  @implementation ProgressCell
@@ -63,7 +63,7 @@
     self.progressView.delegate = self;
  }
  
- - (void)progressViewWillDisplayPopupView:(ASProgressPopupView *)progressView;
+ - (void)progressViewWillDisplayPopUpView:(ASProgressPopUpView *)progressView;
  {
     [self.superview bringSubviewToFront:self];
  }

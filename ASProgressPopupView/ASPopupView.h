@@ -1,14 +1,14 @@
 //
-//  ASPopupView.h
-//  ASProgressPopupView
+//  ASPopUpView.h
+//  ASProgressPopUpView
 //
 //  Created by Alan Skipp on 16/04/2013.
 //  Copyright (c) 2014 Alan Skipp. All rights reserved.
 //
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// This UIView subclass is used internally by ASProgressPopupView
-// The public API is declared in ASProgressPopupView.h
+// This UIView subclass is used internally by ASProgressPopUpView
+// The public API is declared in ASProgressPopUpView.h
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import <UIKit/UIKit.h>
