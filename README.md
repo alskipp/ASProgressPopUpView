@@ -6,7 +6,7 @@ ASProgressPopUpView
 
 A UIProgressView subclass that displays the percentage complete in an easy to customize popup view. It’s the cousin to [ASValueTrackingSlider](https://github.com/alskipp/ASValueTrackingSlider).
 
-![screenshot] (http://alskipp.github.io/ASProgressPopupView/img/screenshot1.gif)
+![screenshot] (http://alskipp.github.io/ASProgressPopUpView/img/screenshot1.gif)
 
 Features
 ---
@@ -44,7 +44,7 @@ self.progressView.popUpViewAnimatedColors = @[[UIColor redColor], [UIColor orang
 
 You update the value exactly as you would normally use a UIProgressView, just update the ‘progress’ property `self.progressView.progress = 0.5;`.
 
-![screenshot] (http://alskipp.github.io/ASProgressPopupView/img/screenshot2.png)
+![screenshot] (http://alskipp.github.io/ASProgressPopUpView/img/screenshot2.png)
 
 ###How to use with UITableView
 
