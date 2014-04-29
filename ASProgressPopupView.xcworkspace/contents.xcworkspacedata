@@ -5,16 +5,16 @@
       location = "group:ASProgressPopUpView"
       name = "ASProgressPopUpView">
       <FileRef
-         location = "group:ASPopupView.h">
+         location = "group:ASPopUpView.h">
       </FileRef>
       <FileRef
-         location = "group:ASPopupView.m">
+         location = "group:ASPopUpView.m">
       </FileRef>
       <FileRef
-         location = "group:ASProgressPopupView.h">
+         location = "group:ASProgressPopUpView.h">
       </FileRef>
       <FileRef
-         location = "group:ASProgressPopupView.m">
+         location = "group:ASProgressPopUpView.m">
       </FileRef>
    </Group>
    <FileRef
