@@ -185,7 +185,16 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 - (void)positionAndUpdatePopUpView
 {
     [self adjustPopUpViewFrame];
-    [self.popUpView setString:[_numberFormatter stringFromNumber:@(self.progress)]];
+    
+    if ([self.delegate respondsToSelector:@selector(stringForProgress:)]) {
+        NSString *s = [self.delegate stringForProgress:self.progress];
+        _popUpViewSize = [self.popUpView popUpSizeForString:s];
+        [self.popUpView setString:s];
+
+    } else {
+        [self.popUpView setString:[_numberFormatter stringFromNumber:@(self.progress)]];
+    }
+    
     [self.popUpView setAnimationOffset:[self currentValueOffset]];
     
     [self autoColorTrack];
@@ -225,7 +234,9 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)showPopUpView
 {
-    [self.delegate progressViewWillDisplayPopUpView:self];
+    if ([self.delegate respondsToSelector:@selector(progressViewWillDisplayPopUpView:)]) {
+        [self.delegate progressViewWillDisplayPopUpView:self];
+    }
     [self positionAndUpdatePopUpView];
     [self.popUpView show];
     _popUpViewIsVisible = YES;

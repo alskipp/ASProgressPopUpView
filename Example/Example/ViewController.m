@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "ASProgressPopUpView.h"
 
-@interface ViewController ()
+@interface ViewController () <ASProgressPopUpViewDelegate>
 @property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView;
 @property (weak, nonatomic) IBOutlet UIButton *progressButton;
 @end
@@ -24,6 +24,13 @@
     [super viewDidLoad];
     self.progressView.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:26];
     self.progressView.popUpViewAnimatedColors = @[[UIColor redColor], [UIColor orangeColor], [UIColor greenColor]];
+    self.progressView.delegate = self;
+}
+
+- (NSString *)stringForProgress:(float)progress;
+{
+    int i = 170.0 * progress;
+    return [NSString stringWithFormat:@"%d/170", i];
 }
 
 - (void)didReceiveMemoryWarning
