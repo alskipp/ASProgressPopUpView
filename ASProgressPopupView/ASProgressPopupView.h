@@ -35,6 +35,9 @@
 // the track color alpha is always set to 1.0, even if popUpView color is less than 1.0
 @property (nonatomic) BOOL autoAdjustTrackColor; // (default is YES)
 
+// default behaviour is to show the popupView when progress starts and hide it when it completes
+// if you prefer to always show the popup view then set 'showPopupViewAtStartAndEnd' to YES
+@property (nonatomic) BOOL alwaysShowPopupView;  // (default is NO)
 @end
 
 // when embedding an ASProgressPopupView inside a TableView or CollectionView

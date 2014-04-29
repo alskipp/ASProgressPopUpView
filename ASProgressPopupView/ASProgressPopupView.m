@@ -119,6 +119,16 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     }
 }
 
+- (void)setAlwaysShowPopupView:(BOOL)show
+{
+    _alwaysShowPopupView = show;
+    if (show && !_popUpViewIsVisible) {
+        [self showPopUpView];
+    } else if (!show && _popUpViewIsVisible && (self.progress == 0.0 || self.progress >= 1.0)) {
+        [self hidePopUpView];
+    }
+}
+
 #pragma mark - ASPopUpViewDelegate
 
 - (void)colorAnimationDidStart;
@@ -145,6 +155,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     _autoAdjustTrackColor = YES;
     _popUpViewIsVisible = NO;
+    _alwaysShowPopupView = NO;
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterPercentStyle];
@@ -212,6 +223,20 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     _popUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];
 }
 
+- (void)showPopUpView
+{
+    [self.delegate progressViewWillDisplayPopupView:self];
+    [self positionAndUpdatePopUpView];
+    [self.popUpView show];
+    _popUpViewIsVisible = YES;
+}
+
+- (void)hidePopUpView
+{
+    [self.popUpView hide];
+    _popUpViewIsVisible = NO;
+}
+
 - (void)addObserversAndNotifications
 {
     [self addObserver:self forKeyPath:@"progress"
@@ -265,12 +290,9 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
         [self positionAndUpdatePopUpView];
         
         if (!_popUpViewIsVisible && self.progress > 0.0) {
-            [self.delegate progressViewWillDisplayPopupView:self];
-            [self.popUpView show];
-            _popUpViewIsVisible = YES;
-        } else if (self.progress >= 1.0) {
-            [self.popUpView hide];
-            _popUpViewIsVisible = NO;
+            [self showPopUpView];
+        } else if (self.progress >= 1.0 && _alwaysShowPopupView == NO) {
+            [self hidePopUpView];
         }
         
     } else if (context == ASProgressViewBoundsContext) {
