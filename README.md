@@ -28,7 +28,7 @@ For [CocoaPods](http://beta.cocoapods.org) users, simply add `pod 'ASProgressPop
 If you don't use CocoaPods, just include these files in your project:
 
 * ASProgressPopUpView (.h .m)
-* ASPopupView (.h .m)
+* ASPopUpView (.h .m)
 
 
 How to use it
@@ -64,7 +64,7 @@ The recommended technique for use with UITableView is to create a UITableViewCel
     self.progressView.delegate = self;
  }
  
- - (void)progressViewWillDisplayPopupView:(ASProgressPopUpView *)progressView;
+ - (void)progressViewWillDisplayPopUpView:(ASProgressPopUpView *)progressView;
  {
     [self.superview bringSubviewToFront:self];
  }
