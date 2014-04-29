@@ -46,7 +46,11 @@
     } else {
         [_timer invalidate];
     }
+}
 
+- (IBAction)toggleShowHide:(UISwitch *)sender
+{
+    self.progressView.alwaysShowPopupView = sender.on ?: NO;
 }
 
 - (void)increaseProgress:(NSTimer *)timer
