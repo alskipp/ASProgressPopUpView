@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E71B047F190FDA8300394A2A /* ASPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E71B047C190FDA8300394A2A /* ASPopupView.m */; };
-		E71B0480190FDA8300394A2A /* ASProgressPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E71B047E190FDA8300394A2A /* ASProgressPopupView.m */; };
+		E71B0485190FF28400394A2A /* ASPopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = E71B0482190FF28400394A2A /* ASPopUpView.m */; };
+		E71B0486190FF28400394A2A /* ASProgressPopUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = E71B0484190FF28400394A2A /* ASProgressPopUpView.m */; };
 		E72C351C18FEC3A800D814BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72C351B18FEC3A800D814BA /* Foundation.framework */; };
 		E72C351E18FEC3A800D814BA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72C351D18FEC3A800D814BA /* CoreGraphics.framework */; };
 		E72C352018FEC3A800D814BA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72C351F18FEC3A800D814BA /* UIKit.framework */; };
@@ -36,10 +36,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E71B047B190FDA8300394A2A /* ASPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASPopupView.h; path = ../ASProgressPopUpView/ASPopupView.h; sourceTree = "<group>"; };
-		E71B047C190FDA8300394A2A /* ASPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASPopupView.m; path = ../ASProgressPopUpView/ASPopupView.m; sourceTree = "<group>"; };
-		E71B047D190FDA8300394A2A /* ASProgressPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASProgressPopupView.h; path = ../ASProgressPopUpView/ASProgressPopupView.h; sourceTree = "<group>"; };
-		E71B047E190FDA8300394A2A /* ASProgressPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASProgressPopupView.m; path = ../ASProgressPopUpView/ASProgressPopupView.m; sourceTree = "<group>"; };
+		E71B0481190FF28400394A2A /* ASPopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASPopUpView.h; path = ../ASProgressPopUpView/ASPopUpView.h; sourceTree = "<group>"; };
+		E71B0482190FF28400394A2A /* ASPopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASPopUpView.m; path = ../ASProgressPopUpView/ASPopUpView.m; sourceTree = "<group>"; };
+		E71B0483190FF28400394A2A /* ASProgressPopUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASProgressPopUpView.h; path = ../ASProgressPopUpView/ASProgressPopUpView.h; sourceTree = "<group>"; };
+		E71B0484190FF28400394A2A /* ASProgressPopUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASProgressPopUpView.m; path = ../ASProgressPopUpView/ASProgressPopUpView.m; sourceTree = "<group>"; };
 		E72C351818FEC3A800D814BA /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E72C351B18FEC3A800D814BA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E72C351D18FEC3A800D814BA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -162,10 +162,10 @@
 		E72C355718FEDC1300D814BA /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
-				E71B047B190FDA8300394A2A /* ASPopupView.h */,
-				E71B047C190FDA8300394A2A /* ASPopupView.m */,
-				E71B047D190FDA8300394A2A /* ASProgressPopupView.h */,
-				E71B047E190FDA8300394A2A /* ASProgressPopupView.m */,
+				E71B0481190FF28400394A2A /* ASPopUpView.h */,
+				E71B0482190FF28400394A2A /* ASPopUpView.m */,
+				E71B0483190FF28400394A2A /* ASProgressPopUpView.h */,
+				E71B0484190FF28400394A2A /* ASProgressPopUpView.m */,
 			);
 			name = Vendor;
 			sourceTree = "<group>";
@@ -269,9 +269,9 @@
 			files = (
 				E72C353218FEC3A800D814BA /* ViewController.m in Sources */,
 				E72C352C18FEC3A800D814BA /* AppDelegate.m in Sources */,
+				E71B0486190FF28400394A2A /* ASProgressPopUpView.m in Sources */,
 				E72C352818FEC3A800D814BA /* main.m in Sources */,
-				E71B047F190FDA8300394A2A /* ASPopupView.m in Sources */,
-				E71B0480190FDA8300394A2A /* ASProgressPopupView.m in Sources */,
+				E71B0485190FF28400394A2A /* ASPopUpView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
