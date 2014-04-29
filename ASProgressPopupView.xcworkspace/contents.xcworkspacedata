@@ -2,13 +2,13 @@
 <Workspace
    version = "1.0">
    <Group
-      location = "group:ASProgressPopupView"
-      name = "ASProgressPopupView">
+      location = "group:ASProgressPopUpView"
+      name = "ASProgressPopUpView">
       <FileRef
          location = "group:ASPopupView.h">
       </FileRef>
       <FileRef
-         location = "group:/Users/alan/Documents/programming/iOS/ASProgressPopupView/ASProgressPopupView/ASPopupView.m">
+         location = "group:ASPopupView.m">
       </FileRef>
       <FileRef
          location = "group:ASProgressPopupView.h">

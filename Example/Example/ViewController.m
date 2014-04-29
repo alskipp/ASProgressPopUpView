@@ -7,10 +7,10 @@
 //
 
 #import "ViewController.h"
-#import "ASProgressPopupView.h"
+#import "ASProgressPopUpView.h"
 
 @interface ViewController ()
-@property (weak, nonatomic) IBOutlet ASProgressPopupView *progressView;
+@property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView;
 @property (weak, nonatomic) IBOutlet UIButton *progressButton;
 @end
 
@@ -46,7 +46,11 @@
     } else {
         [_timer invalidate];
     }
+}
 
+- (IBAction)toggleShowHide:(UISwitch *)sender
+{
+    self.progressView.alwaysShowPopUpView = sender.on ?: NO;
 }
 
 - (void)increaseProgress:(NSTimer *)timer

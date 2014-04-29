@@ -1,17 +1,17 @@
 //
 //  ASPopUpView.m
-//  ASProgressPopupView
+//  ASProgressPopUpView
 //
 //  Created by Alan Skipp on 27/03/2014.
 //  Copyright (c) 2014 Alan Skipp. All rights reserved.
 //
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// This UIView subclass is used internally by ASProgressPopupView
-// The public API is declared in ASProgressPopupView.h
+// This UIView subclass is used internally by ASProgressPopUpView
+// The public API is declared in ASProgressPopUpView.h
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#import "ASPopupView.h"
+#import "ASPopUpView.h"
 
 #define ARROW_LENGTH 13
 #define MIN_POPUPVIEW_WIDTH 36.0

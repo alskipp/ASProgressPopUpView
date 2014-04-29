@@ -1,23 +1,23 @@
 //
-//  ASProgressPopupView.h
-//  ASProgressPopupView
+//  ASProgressPopUpView.h
+//  ASProgressPopUpView
 //
 //  Created by Alan Skipp on 19/10/2013.
 //  Copyright (c) 2013 Alan Skipp. All rights reserved.
 //
 
-#import "ASPopupView.h"
-#import "ASProgressPopupView.h"
+#import "ASPopUpView.h"
+#import "ASProgressPopUpView.h"
 
-static void * ASProgressPopupViewContext = &ASProgressPopupViewContext;
+static void * ASProgressPopUpViewContext = &ASProgressPopUpViewContext;
 static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
-@interface ASProgressPopupView() <ASPopUpViewDelegate>
+@interface ASProgressPopUpView() <ASPopUpViewDelegate>
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (strong, nonatomic) ASPopUpView *popUpView;
 @end
 
-@implementation ASProgressPopupView
+@implementation ASProgressPopUpView
 {
     CGSize _popUpViewSize;
     UIColor *_popUpViewColor;
@@ -119,6 +119,16 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     }
 }
 
+- (void)setAlwaysShowPopUpView:(BOOL)show
+{
+    _alwaysShowPopUpView = show;
+    if (show && !_popUpViewIsVisible) {
+        [self showPopUpView];
+    } else if (!show && _popUpViewIsVisible && (self.progress == 0.0 || self.progress >= 1.0)) {
+        [self hidePopUpView];
+    }
+}
+
 #pragma mark - ASPopUpViewDelegate
 
 - (void)colorAnimationDidStart;
@@ -128,8 +138,8 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)popUpViewDidHide;
 {
-    if ([self.delegate respondsToSelector:@selector(progressViewDidHidePopupView:)]) {
-        [self.delegate progressViewDidHidePopupView:self];
+    if ([self.delegate respondsToSelector:@selector(progressViewDidHidePopUpView:)]) {
+        [self.delegate progressViewDidHidePopUpView:self];
     }
 }
 
@@ -145,6 +155,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     _autoAdjustTrackColor = YES;
     _popUpViewIsVisible = NO;
+    _alwaysShowPopUpView = NO;
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterPercentStyle];
@@ -159,6 +170,8 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
     self.textColor = [UIColor whiteColor];
     self.font = [UIFont boldSystemFontOfSize:24.0f];
+    
+    [self positionAndUpdatePopUpView];
 }
 
 // ensure animation restarts if app is closed then becomes active again
@@ -210,11 +223,25 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     _popUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];
 }
 
+- (void)showPopUpView
+{
+    [self.delegate progressViewWillDisplayPopUpView:self];
+    [self positionAndUpdatePopUpView];
+    [self.popUpView show];
+    _popUpViewIsVisible = YES;
+}
+
+- (void)hidePopUpView
+{
+    [self.popUpView hide];
+    _popUpViewIsVisible = NO;
+}
+
 - (void)addObserversAndNotifications
 {
     [self addObserver:self forKeyPath:@"progress"
               options:NSKeyValueObservingOptionNew
-              context:ASProgressPopupViewContext];
+              context:ASProgressPopUpViewContext];
     
     [self addObserver:self forKeyPath:@"bounds"
               options:NSKeyValueObservingOptionNew
@@ -259,16 +286,13 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (context == ASProgressPopupViewContext) {
+    if (context == ASProgressPopUpViewContext) {
         [self positionAndUpdatePopUpView];
         
         if (!_popUpViewIsVisible && self.progress > 0.0) {
-            [self.delegate progressViewWillDisplayPopupView:self];
-            [self.popUpView show];
-            _popUpViewIsVisible = YES;
-        } else if (self.progress >= 1.0) {
-            [self.popUpView hide];
-            _popUpViewIsVisible = NO;
+            [self showPopUpView];
+        } else if (self.progress >= 1.0 && _alwaysShowPopUpView == NO) {
+            [self hidePopUpView];
         }
         
     } else if (context == ASProgressViewBoundsContext) {

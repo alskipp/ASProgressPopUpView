@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qof-vx-ZGw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qof-vx-ZGw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cLB-8R-yUn" customClass="ASProgressPopupView">
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cLB-8R-yUn" customClass="ASProgressPopUpView">
                                 <rect key="frame" x="20" y="184" width="280" height="2"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
@@ -36,13 +36,33 @@
                                     <action selector="startProgress:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="KdK-Dt-hOJ"/>
                                 </connections>
                             </button>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="OQG-Fv-W5X">
+                                <rect key="frame" x="251" y="79" width="51" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="toggleShowHide:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="1Wt-up-zOE"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show popup view at start and end" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B7U-Uk-p6a">
+                                <rect key="frame" x="20" y="84" width="223" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="OQG-Fv-W5X" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="15" id="BCu-6Z-Td9"/>
                             <constraint firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" constant="20" symbolic="YES" id="Egr-tT-4yy"/>
+                            <constraint firstItem="OQG-Fv-W5X" firstAttribute="centerY" secondItem="B7U-Uk-p6a" secondAttribute="centerY" id="Q3h-ys-DG8"/>
+                            <constraint firstItem="OQG-Fv-W5X" firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" id="cAN-t7-7Kg"/>
+                            <constraint firstItem="OQG-Fv-W5X" firstAttribute="leading" secondItem="B7U-Uk-p6a" secondAttribute="trailing" constant="8" symbolic="YES" id="gvv-OO-ojg"/>
                             <constraint firstItem="cLB-8R-yUn" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="120" id="i7l-WY-700"/>
                             <constraint firstItem="U7h-Xm-xUE" firstAttribute="top" secondItem="cLB-8R-yUn" secondAttribute="bottom" constant="8" symbolic="YES" id="iOQ-Wg-I3d"/>
                             <constraint firstAttribute="centerX" secondItem="U7h-Xm-xUE" secondAttribute="centerX" id="khq-oF-Vvg"/>
+                            <constraint firstItem="B7U-Uk-p6a" firstAttribute="leading" secondItem="cLB-8R-yUn" secondAttribute="leading" id="v7p-Ci-EAd"/>
+                            <constraint firstItem="B7U-Uk-p6a" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="w1s-F8-WtV"/>
                             <constraint firstItem="cLB-8R-yUn" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" symbolic="YES" id="xyU-eg-0Zo"/>
                         </constraints>
                     </view>

@@ -1,4 +1,4 @@
-ASProgressPopupView
+ASProgressPopUpView
 ========
 
 ###What is it?
@@ -27,14 +27,14 @@ For [CocoaPods](http://beta.cocoapods.org) users, simply add `pod 'ASProgressPop
 
 If you don't use CocoaPods, just include these files in your project:
 
-* ASProgressPopupView (.h .m)
+* ASProgressPopUpView (.h .m)
 * ASPopupView (.h .m)
 
 
 How to use it
 ---
 
-It’s very simple. Drag a UIProgressView into your Storyboard/nib and set its class to ASProgressPopupView – that's it.
+It’s very simple. Drag a UIProgressView into your Storyboard/nib and set its class to ASProgressPopUpView – that's it.
 The example below demonstrates how to customize the appearance.
 
 ```objective-c
@@ -48,14 +48,14 @@ You update the value exactly as you would normally use a UIProgressView, just up
 
 ###How to use with UITableView
 
-To use  effectively inside a UITableView you need to implement the `<ASProgressPopupViewDelegate>` protocol. If you just embed an ASProgressPopupView inside a UITableViewCell the popUpView will probably be obscured by the cell above. The delegate method notifies you before the popUpView appears so that you can ensure that your UITableViewCell is rendered above the others.
+To use  effectively inside a UITableView you need to implement the `<ASProgressPopUpViewDelegate>` protocol. If you just embed an ASProgressPopUpView inside a UITableViewCell the popUpView will probably be obscured by the cell above. The delegate method notifies you before the popUpView appears so that you can ensure that your UITableViewCell is rendered above the others.
 
 The recommended technique for use with UITableView is to create a UITableViewCell subclass that implements the delegate method.
 
 
 ```objective-c
- @interface ProgressCell : UITableViewCell <ASProgressPopupViewDelegate>
- @property (weak, nonatomic) IBOutlet ASProgressPopupView *progressView;
+ @interface ProgressCell : UITableViewCell <ASProgressPopUpViewDelegate>
+ @property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView;
  @end
  
  @implementation ProgressCell
@@ -64,7 +64,7 @@ The recommended technique for use with UITableView is to create a UITableViewCel
     self.progressView.delegate = self;
  }
  
- - (void)progressViewWillDisplayPopupView:(ASProgressPopupView *)progressView;
+ - (void)progressViewWillDisplayPopupView:(ASProgressPopUpView *)progressView;
  {
     [self.superview bringSubviewToFront:self];
  }
