@@ -173,7 +173,7 @@ NSString *const FillColorAnimation = @"fillColor";
 {
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
-            [self.layer removeAnimationForKey:@"transform"];
+            if (self.layer.opacity == 0.0) [self.layer removeAnimationForKey:@"transform"];
             [self.delegate popUpViewDidHide];
         }];
         
