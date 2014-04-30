@@ -27,7 +27,7 @@
     self.progressView.delegate = self;
 }
 
-- (NSString *)stringForProgress:(float)progress;
+- (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress;
 {
     int i = 170.0 * progress;
     return [NSString stringWithFormat:@"%d/170", i];

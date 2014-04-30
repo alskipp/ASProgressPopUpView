@@ -123,6 +123,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     _alwaysShowPopUpView = show;
     if (show && !_popUpViewIsVisible) {
+        [self positionAndUpdatePopUpView];
         [self showPopUpView];
     } else if (!show && _popUpViewIsVisible && (self.progress == 0.0 || self.progress >= 1.0)) {
         [self hidePopUpView];
@@ -184,8 +185,9 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)positionAndUpdatePopUpView
 {
-    if ([self.delegate respondsToSelector:@selector(stringForProgress:)]) {
-        NSString *s = [self.delegate stringForProgress:self.progress];
+    if ([self.delegate respondsToSelector:@selector(progressView:stringForProgress:)]) {
+
+        NSString *s = [self.delegate progressView:self stringForProgress:self.progress];
         _popUpViewSize = [self.popUpView popUpSizeForString:s];
         [self.popUpView setString:s];
 

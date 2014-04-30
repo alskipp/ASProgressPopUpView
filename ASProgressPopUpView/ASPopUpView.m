@@ -124,8 +124,8 @@ NSString *const FillColorAnimation = @"fillColor";
 
 - (void)setArrowCenterOffset:(CGFloat)offset
 {
-    // only redraw if the offset has changed
-    if (_arrowCenterOffset != offset) {
+    // only redraw if the offset or popUpView size has changed
+    if (_arrowCenterOffset != offset || !CGSizeEqualToSize(_oldSize, self.bounds.size)) {
         _arrowCenterOffset = offset;
         
         // the arrow tip should be the origin of any scale animations

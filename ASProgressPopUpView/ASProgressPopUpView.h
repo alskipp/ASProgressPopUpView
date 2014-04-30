@@ -45,7 +45,7 @@
 // to prevent the popUpView from being obscured
 @protocol ASProgressPopUpViewDelegate <NSObject>
 @optional
-- (NSString *)stringForProgress:(float)progress;
+- (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress;
 
 - (void)progressViewWillDisplayPopUpView:(ASProgressPopUpView *)progressView;
 - (void)progressViewDidHidePopUpView:(ASProgressPopUpView *)progressView;
