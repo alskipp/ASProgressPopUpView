@@ -47,19 +47,25 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 #pragma mark - public
 
-- (void)setDelegate:(id<ASProgressPopUpViewDelegate>)delegate
+- (void)setDataSource:(id<ASProgressPopUpViewDataSource>)dataSource
 {
-    _delegate = delegate;
+    _dataSource = dataSource;;
     
-    if ([self.delegate respondsToSelector:@selector(progressView:stringForProgress:)]) {
-        CGFloat width = 0.0, height = 0.0;
-        for (float i=0.0; i<1.1; i+=0.1) {
-            CGSize s = [self.popUpView popUpSizeForString:[self.delegate progressView:self stringForProgress:i]];
-            if (s.width > width) width = s.width;
-            if (s.height > height) height = s.height;
-        }
-        _popUpViewSize = CGSizeMake(width, height);
+    // if dataSource doesn't want popUpView size precalculated then return early from method
+    if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
+        if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) return;
     }
+    
+    // calculate the largest popUpView size needed to keep the size consistent
+    // ask the dataSource for values between 0.0 - 1.0 in 0.01 increments
+    // set size to the largest width and height returned from the dataSource
+    CGFloat width = 0.0, height = 0.0;
+    for (int i=0; i<=100; i++) {
+        CGSize s = [self.popUpView popUpSizeForString:[self.dataSource progressView:self stringForProgress:i/100.0]];
+        if (s.width > width) width = s.width;
+        if (s.height > height) height = s.height;
+    }
+    _popUpViewSize = CGSizeMake(width, height);
 }
 
 - (void)setAutoAdjustTrackColor:(BOOL)autoAdjust
@@ -200,11 +206,16 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)positionAndUpdatePopUpView
 {
-    if ([self.delegate respondsToSelector:@selector(progressView:stringForProgress:)]) {
-
-        NSString *s = [self.delegate progressView:self stringForProgress:self.progress];
-//        _popUpViewSize = [self.popUpView popUpSizeForString:s];
-        [self.popUpView setString:s];
+    if (self.dataSource) {
+        NSString *progressString = [self.dataSource progressView:self stringForProgress:self.progress];
+        
+        if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
+            if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) {
+                _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
+            }
+        }
+        
+        [self.popUpView setString:progressString];
 
     } else {
         [self.popUpView setString:[_numberFormatter stringFromNumber:@(self.progress)]];
@@ -250,9 +261,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)showPopUpView
 {
-    if ([self.delegate respondsToSelector:@selector(progressViewWillDisplayPopUpView:)]) {
-        [self.delegate progressViewWillDisplayPopUpView:self];
-    }
+    [self.delegate progressViewWillDisplayPopUpView:self];
     [self positionAndUpdatePopUpView];
     [self.popUpView show];
     _popUpViewIsVisible = YES;

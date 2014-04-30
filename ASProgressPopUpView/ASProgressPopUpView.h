@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 @protocol ASProgressPopUpViewDelegate;
+@protocol ASProgressPopUpViewDataSource;
 
 @interface ASProgressPopUpView : UIProgressView
 
-// delegate is only needed when used with a TableView or CollectionView - see below
-@property (weak, nonatomic) id<ASProgressPopUpViewDelegate> delegate;
 @property (strong, nonatomic) UIColor *textColor;
 
 // font can not be nil, it must be a valid UIFont
@@ -38,16 +37,35 @@
 // default behaviour is to show the popupView when progress starts and hide it when it completes
 // if you prefer to always show the popup view then set 'showPopUpViewAtStartAndEnd' to YES
 @property (nonatomic) BOOL alwaysShowPopUpView;  // (default is NO)
+
+// by default the popUpView displays progress from 0% - 100%
+// to display custom text instead, implement the datasource protocol - see below
+@property (weak, nonatomic) id<ASProgressPopUpViewDataSource> dataSource;
+
+// delegate is only needed when used with a TableView or CollectionView - see below
+@property (weak, nonatomic) id<ASProgressPopUpViewDelegate> delegate;
 @end
+
+
+// to supply custom text to the popUpView label, implement <ASProgressPopUpViewDataSource>
+// the dataSource will be messaged each time the progress changes
+@protocol ASProgressPopUpViewDataSource <NSObject>
+- (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress;
+
+@optional
+// by default the popUpView precalculates the largest size required and uses this size to display all values
+// if you'd prefer the popUpView to change size as the text values change then return NO from this method
+- (BOOL)progressViewShouldPreCalculatePopUpViewSize:(ASProgressPopUpView *)progressView;
+@end
+
 
 // when embedding an ASProgressPopUpView inside a TableView or CollectionView
 // you need to ensure that the cell it resides in is brought to the front of the view hierarchy
 // to prevent the popUpView from being obscured
 @protocol ASProgressPopUpViewDelegate <NSObject>
-@optional
-- (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress;
-
 - (void)progressViewWillDisplayPopUpView:(ASProgressPopUpView *)progressView;
+
+@optional
 - (void)progressViewDidHidePopUpView:(ASProgressPopUpView *)progressView;
 @end
 
