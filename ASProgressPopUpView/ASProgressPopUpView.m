@@ -47,6 +47,21 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 #pragma mark - public
 
+- (void)setDelegate:(id<ASProgressPopUpViewDelegate>)delegate
+{
+    _delegate = delegate;
+    
+    if ([self.delegate respondsToSelector:@selector(progressView:stringForProgress:)]) {
+        CGFloat width = 0.0, height = 0.0;
+        for (float i=0.0; i<1.1; i+=0.1) {
+            CGSize s = [self.popUpView popUpSizeForString:[self.delegate progressView:self stringForProgress:i]];
+            if (s.width > width) width = s.width;
+            if (s.height > height) height = s.height;
+        }
+        _popUpViewSize = CGSizeMake(width, height);
+    }
+}
+
 - (void)setAutoAdjustTrackColor:(BOOL)autoAdjust
 {
     if (_autoAdjustTrackColor == autoAdjust) return;
@@ -188,7 +203,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     if ([self.delegate respondsToSelector:@selector(progressView:stringForProgress:)]) {
 
         NSString *s = [self.delegate progressView:self stringForProgress:self.progress];
-        _popUpViewSize = [self.popUpView popUpSizeForString:s];
+//        _popUpViewSize = [self.popUpView popUpSizeForString:s];
         [self.popUpView setString:s];
 
     } else {
