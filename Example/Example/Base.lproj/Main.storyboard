@@ -17,11 +17,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cLB-8R-yUn" customClass="ASProgressPopUpView">
-                                <rect key="frame" x="20" y="184" width="280" height="2"/>
+                                <rect key="frame" x="20" y="174" width="280" height="2"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U7h-Xm-xUE">
-                                <rect key="frame" x="126" y="194" width="69" height="41"/>
+                                <rect key="frame" x="126" y="251" width="69" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="69" id="hcn-Q8-X7Z"/>
@@ -50,17 +50,24 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="piG-nv-qSd" customClass="ASProgressPopUpView">
+                                <rect key="frame" x="20" y="241" width="280" height="2"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="piG-nv-qSd" firstAttribute="leading" secondItem="cLB-8R-yUn" secondAttribute="leading" id="00s-85-5hu"/>
                             <constraint firstItem="OQG-Fv-W5X" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="15" id="BCu-6Z-Td9"/>
+                            <constraint firstItem="U7h-Xm-xUE" firstAttribute="top" secondItem="piG-nv-qSd" secondAttribute="bottom" constant="8" symbolic="YES" id="DhM-SG-38J"/>
                             <constraint firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" constant="20" symbolic="YES" id="Egr-tT-4yy"/>
                             <constraint firstItem="OQG-Fv-W5X" firstAttribute="centerY" secondItem="B7U-Uk-p6a" secondAttribute="centerY" id="Q3h-ys-DG8"/>
+                            <constraint firstItem="piG-nv-qSd" firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" id="Rv6-S6-QTL"/>
                             <constraint firstItem="OQG-Fv-W5X" firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" id="cAN-t7-7Kg"/>
                             <constraint firstItem="OQG-Fv-W5X" firstAttribute="leading" secondItem="B7U-Uk-p6a" secondAttribute="trailing" constant="8" symbolic="YES" id="gvv-OO-ojg"/>
-                            <constraint firstItem="cLB-8R-yUn" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="120" id="i7l-WY-700"/>
-                            <constraint firstItem="U7h-Xm-xUE" firstAttribute="top" secondItem="cLB-8R-yUn" secondAttribute="bottom" constant="8" symbolic="YES" id="iOQ-Wg-I3d"/>
+                            <constraint firstItem="cLB-8R-yUn" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="110" id="i7l-WY-700"/>
                             <constraint firstAttribute="centerX" secondItem="U7h-Xm-xUE" secondAttribute="centerX" id="khq-oF-Vvg"/>
+                            <constraint firstItem="piG-nv-qSd" firstAttribute="top" secondItem="cLB-8R-yUn" secondAttribute="bottom" constant="65" id="mWV-m7-dqn"/>
                             <constraint firstItem="B7U-Uk-p6a" firstAttribute="leading" secondItem="cLB-8R-yUn" secondAttribute="leading" id="v7p-Ci-EAd"/>
                             <constraint firstItem="B7U-Uk-p6a" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="w1s-F8-WtV"/>
                             <constraint firstItem="cLB-8R-yUn" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" symbolic="YES" id="xyU-eg-0Zo"/>
@@ -70,7 +77,8 @@
                     <navigationItem key="navigationItem" id="spt-FX-27g"/>
                     <connections>
                         <outlet property="progressButton" destination="U7h-Xm-xUE" id="kUI-HY-3t4"/>
-                        <outlet property="progressView" destination="cLB-8R-yUn" id="dUZ-2D-3Ut"/>
+                        <outlet property="progressView1" destination="cLB-8R-yUn" id="Ris-EF-tZw"/>
+                        <outlet property="progressView2" destination="piG-nv-qSd" id="tAi-pz-hcU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
