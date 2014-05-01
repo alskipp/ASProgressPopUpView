@@ -123,7 +123,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     _alwaysShowPopUpView = show;
     if (show && !_popUpViewIsVisible) {
-        [self positionAndUpdatePopUpView];
         [self showPopUpView];
     } else if (!show && _popUpViewIsVisible && (self.progress == 0.0 || self.progress >= 1.0)) {
         [self hidePopUpView];
@@ -177,8 +176,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
     self.textColor = [UIColor whiteColor];
     self.font = [UIFont boldSystemFontOfSize:24.0f];
-    
-    [self positionAndUpdatePopUpView];
 }
 
 // ensure animation restarts if app is closed then becomes active again
@@ -199,7 +196,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
                 _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
             }
         }
-        
         [self.popUpView setString:progressString];
 
     } else {
@@ -227,7 +223,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     
     CGFloat offset = minOffsetX < 0.0 ? minOffsetX : (maxOffsetX > 0.0 ? maxOffsetX : 0.0);
     popUpRect.origin.x -= offset;
-        
+    
     self.popUpView.frame = CGRectIntegral(popUpRect);
     [self.popUpView setArrowCenterOffset:offset];
 }
@@ -329,12 +325,13 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == ASProgressPopUpViewContext) {
-        [self positionAndUpdatePopUpView];
         
         if (!_popUpViewIsVisible && self.progress > 0.0) {
             [self showPopUpView];
         } else if (self.progress >= 1.0 && _alwaysShowPopUpView == NO) {
             [self hidePopUpView];
+        } else {
+            [self positionAndUpdatePopUpView];
         }
         
     } else if (context == ASProgressViewBoundsContext) {
