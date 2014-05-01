@@ -269,6 +269,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)hidePopUpView
 {
+    [self positionAndUpdatePopUpView];
     [self.popUpView hide];
     _popUpViewIsVisible = NO;
 }
