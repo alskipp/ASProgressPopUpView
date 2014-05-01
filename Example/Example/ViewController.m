@@ -28,11 +28,7 @@
     self.progressView1.dataSource = self;
 }
 
-- (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress
-{
-    int i = 170.0 * progress;
-    return [NSString stringWithFormat:@"%d/170", i];
-}
+#pragma mark - IBActions
 
 - (IBAction)startProgress:(UIButton *)sender
 {
@@ -58,6 +54,8 @@
     self.progressView2.alwaysShowPopUpView = sender.on ?: NO;
 }
 
+#pragma mark - Timer
+
 - (void)increaseProgress:(NSTimer *)timer
 {
     self.progressView1.progress += 0.01;
@@ -67,6 +65,35 @@
         self.progressButton.selected = NO;
     }
 }
+
+#pragma mark - ASProgressPopUpView dataSource
+
+// <ASProgressPopUpViewDataSource> is entirely optional
+// it allows you to supply custom NSStrings to ASProgressPopUpView
+- (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress
+{
+    NSString *s;
+    if (progress < 0.2) {
+        s = @"Just starting";
+    } else if (progress > 0.4 && progress < 0.6) {
+        s = @"About halfway";
+    } else if (progress > 0.75 && progress < 1.0) {
+        s = @"Nearly there";
+    } else if (progress >= 1.0) {
+        s = @"Complete";
+    }
+    return s;
+}
+
+// by default ASProgressPopUpView precalculates the largest popUpView size needed
+// it then uses this size for all values and maintains a consistent size
+// if you want the popUpView size to adapt as values change then return 'NO'
+- (BOOL)progressViewShouldPreCalculatePopUpViewSize:(ASProgressPopUpView *)progressView;
+{
+    return NO;
+}
+
+#pragma mark - Cleanup
 
 - (void)didReceiveMemoryWarning
 {
