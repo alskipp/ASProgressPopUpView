@@ -43,13 +43,38 @@ self.progressView.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:
 self.progressView.popUpViewAnimatedColors = @[[UIColor redColor], [UIColor orangeColor], [UIColor greenColor]];
 ```
 
-You update the value exactly as you would normally use a UIProgressView, just update the ‘progress’ property `self.progressView.progress = 0.5;`.
+You update the value exactly as you would normally use a UIProgressView, just update the ‘progress’ property `self.progressView.progress = 0.29;`.
 
 ![screenshot] (http://alskipp.github.io/ASProgressPopUpView/img/screenshot2.png)
 
+
+###How to use custom strings in popUpView label
+
+Set your controller as the `dataSource` to `ASProgressPopUpView`, then return NSStrings for any progress values you want to customize.
+  
+```objective-c
+- (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress
+{
+    NSString *s;
+    if (progress < 0.2) {
+        s = @"Just starting";
+    } else if (progress > 0.4 && progress < 0.6) {
+        s = @"About halfway";
+    } else if (progress > 0.75 && progress < 1.0) {
+        s = @"Nearly there";
+    } else if (progress >= 1.0) {
+        s = @"Complete";
+    }
+    return s;
+}
+```
+
+![screenshot] (http://alskipp.github.io/ASProgressPopUpView/img/screenshot3.png)
+
+
 ###How to use with UITableView
 
-To use  effectively inside a UITableView you need to implement the `<ASProgressPopUpViewDelegate>` protocol. If you just embed an ASProgressPopUpView inside a UITableViewCell the popUpView will probably be obscured by the cell above. The delegate method notifies you before the popUpView appears so that you can ensure that your UITableViewCell is rendered above the others.
+To use effectively inside a UITableView you need to implement the `<ASProgressPopUpViewDelegate>` protocol. If you just embed an ASProgressPopUpView inside a UITableViewCell the popUpView will probably be obscured by the cell above. The delegate method notifies you before the popUpView appears so that you can ensure that your UITableViewCell is rendered above the others.
 
 The recommended technique for use with UITableView is to create a UITableViewCell subclass that implements the delegate method.
 
