@@ -47,27 +47,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 #pragma mark - public
 
-- (void)setDataSource:(id<ASProgressPopUpViewDataSource>)dataSource
-{
-    _dataSource = dataSource;;
-    
-    // if dataSource doesn't want popUpView size precalculated then return early from method
-    if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
-        if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) return;
-    }
-    
-    // calculate the largest popUpView size needed to keep the size consistent
-    // ask the dataSource for values between 0.0 - 1.0 in 0.01 increments
-    // set size to the largest width and height returned from the dataSource
-    CGFloat width = 0.0, height = 0.0;
-    for (int i=0; i<=100; i++) {
-        CGSize s = [self.popUpView popUpSizeForString:[self.dataSource progressView:self stringForProgress:i/100.0]];
-        if (s.width > width) width = s.width;
-        if (s.height > height) height = s.height;
-    }
-    _popUpViewSize = CGSizeMake(width, height);
-}
-
 - (void)setAutoAdjustTrackColor:(BOOL)autoAdjust
 {
     if (_autoAdjustTrackColor == autoAdjust) return;
@@ -149,6 +128,12 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     } else if (!show && _popUpViewIsVisible && (self.progress == 0.0 || self.progress >= 1.0)) {
         [self hidePopUpView];
     }
+}
+
+- (void)setDataSource:(id<ASProgressPopUpViewDataSource>)dataSource
+{
+    _dataSource = dataSource;;
+    [self calculatePopUpViewSize];
 }
 
 #pragma mark - ASPopUpViewDelegate
@@ -256,7 +241,27 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)calculatePopUpViewSize
 {
-    _popUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];
+    // if there isn't a dataSource, calculate the popUpView size needed for the string ‘100%’
+    if (!self.dataSource) {
+        _popUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];
+        return;
+    }
+    
+    // if dataSource doesn't want popUpView size precalculated then return early from method
+    if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
+        if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) return;
+    }
+    
+    // calculate the largest popUpView size needed to keep the size consistent
+    // ask the dataSource for values between 0.0 - 1.0 in 0.01 increments
+    // set size to the largest width and height returned from the dataSource
+    CGFloat width = 0.0, height = 0.0;
+    for (int i=0; i<=100; i++) {
+        CGSize s = [self.popUpView popUpSizeForString:[self.dataSource progressView:self stringForProgress:i/100.0]];
+        if (s.width > width) width = s.width;
+        if (s.height > height) height = s.height;
+    }
+    _popUpViewSize = CGSizeMake(width, height);
 }
 
 - (void)showPopUpView
