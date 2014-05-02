@@ -61,7 +61,7 @@ NSString *const FillColorAnimation = @"fillColor";
     return [UIColor colorWithCGColor:[_backgroundLayer.presentationLayer fillColor]];
 }
 
-- (void)setColor:(UIColor *)color;
+- (void)setColor:(UIColor *)color
 {
     [_backgroundLayer removeAnimationForKey:FillColorAnimation];
     _backgroundLayer.fillColor = color.CGColor;
