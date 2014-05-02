@@ -124,18 +124,15 @@ NSString *const FillColorAnimation = @"fillColor";
 
 - (void)setArrowCenterOffset:(CGFloat)offset
 {
-    // only redraw if the offset or popUpView size has changed
-    if (_arrowCenterOffset != offset || !CGSizeEqualToSize(_oldSize, self.bounds.size)) {
-        _arrowCenterOffset = offset;
-        
-        // the arrow tip should be the origin of any scale animations
-        // to achieve this, position the anchorPoint at the tip of the arrow
-
-        CGRect f = self.layer.frame;
-        self.layer.anchorPoint = CGPointMake(0.5+(offset/self.bounds.size.width), 1);
-        self.layer.frame = f; // changing anchor repositions layer, so must reset frame afterwards
-        [self drawPath];
-    }
+    if (_arrowCenterOffset == offset) return; // only redraw if the offset has changed
+    _arrowCenterOffset = offset;
+    
+    // the arrow tip should be the origin of any scale animations
+    // to achieve this, position the anchorPoint at the tip of the arrow
+    CGRect f = self.layer.frame;
+    self.layer.anchorPoint = CGPointMake(0.5+(offset/self.bounds.size.width), 1);
+    self.layer.frame = f; // changing anchor repositions layer, so must reset frame afterwards
+    [self drawPath];
 }
 
 - (CGSize)popUpSizeForString:(NSString *)string
@@ -238,18 +235,17 @@ NSString *const FillColorAnimation = @"fillColor";
 {
     [super layoutSubviews];
     
-    // only redraw if the view size has changed
-    if (!CGSizeEqualToSize(self.bounds.size, _oldSize)) {
-        _oldSize = self.bounds.size;
-        _backgroundLayer.bounds = self.bounds;
-        
-        CGFloat textHeight = [_textLayer.string size].height;
-        CGRect textRect = CGRectMake(self.bounds.origin.x,
-                                     (self.bounds.size.height-ARROW_LENGTH-textHeight)/2,
-                                     self.bounds.size.width, textHeight);
-        _textLayer.frame = CGRectIntegral(textRect);
-        [self drawPath];
-    }
+    if (CGSizeEqualToSize(self.bounds.size, _oldSize)) return; // return if view size hasn't changed
+    
+    _oldSize = self.bounds.size;
+    _backgroundLayer.bounds = self.bounds;
+    
+    CGFloat textHeight = [_textLayer.string size].height;
+    CGRect textRect = CGRectMake(self.bounds.origin.x,
+                                 (self.bounds.size.height-ARROW_LENGTH-textHeight)/2,
+                                 self.bounds.size.width, textHeight);
+    _textLayer.frame = CGRectIntegral(textRect);
+    [self drawPath];
 }
 
 static UIColor* opaqueUIColorFromCGColor(CGColorRef col)
