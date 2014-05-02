@@ -194,10 +194,10 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
     if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
         if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) {
-            if (![self.dataSource progressView:self stringForProgress:self.progress]) {
-                _popUpViewSize = _defaultPopUpViewSize;
-            } else {
+            if ([self.dataSource progressView:self stringForProgress:self.progress]) {
                 _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
+            } else {
+                _popUpViewSize = _defaultPopUpViewSize;
             }
         }
     }
