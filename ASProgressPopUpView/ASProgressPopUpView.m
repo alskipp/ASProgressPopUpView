@@ -120,6 +120,12 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     }
 }
 
+- (void)setPopUpViewCornerRadius:(CGFloat)popUpViewCornerRadius
+{
+    _popUpViewCornerRadius = popUpViewCornerRadius;
+    [self.popUpView setCornerRadius:popUpViewCornerRadius];
+}
+
 - (void)setAlwaysShowPopUpView:(BOOL)show
 {
     _alwaysShowPopUpView = show;
@@ -171,6 +177,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     self.popUpView = [[ASPopUpView alloc] initWithFrame:CGRectZero];
     self.popUpViewColor = [UIColor colorWithHue:0.6 saturation:0.6 brightness:0.5 alpha:0.8];
 
+    self.popUpViewCornerRadius = 4.0;
     self.popUpView.alpha = 0.0;
     self.popUpView.delegate = self;
     [self addSubview:self.popUpView];

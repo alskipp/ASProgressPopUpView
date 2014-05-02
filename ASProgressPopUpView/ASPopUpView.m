@@ -56,6 +56,13 @@ NSString *const FillColorAnimation = @"fillColor";
     return self;
 }
 
+- (void)setCornerRadius:(CGFloat)radius
+{
+    if (_cornerRadius == radius) return;
+    _cornerRadius = radius;
+    [self drawPath];
+}
+
 - (UIColor *)color
 {
     return [UIColor colorWithCGColor:[_backgroundLayer.presentationLayer fillColor]];
@@ -213,7 +220,7 @@ NSString *const FillColorAnimation = @"fillColor";
     // Create rounded rect
     CGRect roundedRect = self.bounds;
     roundedRect.size.height -= ARROW_LENGTH;
-    UIBezierPath *roundedRectPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:4.0];
+    UIBezierPath *roundedRectPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:_cornerRadius];
     
     // Create arrow path
     CGFloat maxX = CGRectGetMaxX(roundedRect); // prevent arrow from extending beyond this point
