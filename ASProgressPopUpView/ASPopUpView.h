@@ -22,6 +22,7 @@
 @interface ASPopUpView : UIView
 
 @property (weak, nonatomic) id <ASPopUpViewDelegate> delegate;
+@property (nonatomic) CGFloat cornerRadius;
 
 - (UIColor *)color;
 - (void)setColor:(UIColor *)color;

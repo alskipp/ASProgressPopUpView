@@ -13,10 +13,11 @@
 
 #import "ASPopUpView.h"
 
-#define ARROW_LENGTH 13
-#define MIN_POPUPVIEW_WIDTH 36.0
-#define MIN_POPUPVIEW_HEIGHT 27.0
-#define POPUPVIEW_WIDTH_INSET 10.0
+const float ARROW_LENGTH = 13.0;
+const float MIN_POPUPVIEW_WIDTH = 36.0;
+const float MIN_POPUPVIEW_HEIGHT = 27.0;
+const float POPUPVIEW_WIDTH_PAD = 1.15;
+const float POPUPVIEW_HEIGHT_PAD = 1.1;
 
 NSString *const FillColorAnimation = @"fillColor";
 
@@ -54,6 +55,13 @@ NSString *const FillColorAnimation = @"fillColor";
         _attributedString = [[NSMutableAttributedString alloc] initWithString:@" " attributes:nil];
     }
     return self;
+}
+
+- (void)setCornerRadius:(CGFloat)radius
+{
+    if (_cornerRadius == radius) return;
+    _cornerRadius = radius;
+    [self drawPath];
 }
 
 - (UIColor *)color
@@ -139,8 +147,8 @@ NSString *const FillColorAnimation = @"fillColor";
 {
     [[_attributedString mutableString] setString:string];
     CGFloat w, h;
-    w = ceilf(MAX([_attributedString size].width, MIN_POPUPVIEW_WIDTH)+POPUPVIEW_WIDTH_INSET);
-    h = ceilf(MAX([_attributedString size].height, MIN_POPUPVIEW_HEIGHT)+ARROW_LENGTH);
+    w = ceilf(MAX([_attributedString size].width, MIN_POPUPVIEW_WIDTH) * POPUPVIEW_WIDTH_PAD);
+    h = ceilf(MAX([_attributedString size].height, MIN_POPUPVIEW_HEIGHT) * POPUPVIEW_HEIGHT_PAD + ARROW_LENGTH);
     return CGSizeMake(w, h);
 }
 
@@ -213,16 +221,20 @@ NSString *const FillColorAnimation = @"fillColor";
     // Create rounded rect
     CGRect roundedRect = self.bounds;
     roundedRect.size.height -= ARROW_LENGTH;
-    UIBezierPath *roundedRectPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:4.0];
+    UIBezierPath *roundedRectPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:_cornerRadius];
     
     // Create arrow path
     CGFloat maxX = CGRectGetMaxX(roundedRect); // prevent arrow from extending beyond this point
+    CGFloat arrowTipX = CGRectGetMidX(self.bounds) + _arrowCenterOffset;
+    CGPoint tip = CGPointMake(arrowTipX, CGRectGetMaxY(self.bounds));
+    
+    CGFloat arrowLength = CGRectGetHeight(roundedRect)/2.0;
+    CGFloat x = arrowLength * tan(45.0 * M_PI/180); // x = half the length of the base of the arrow
+    
     UIBezierPath *arrowPath = [UIBezierPath bezierPath];
-    CGFloat arrowX = CGRectGetMidX(self.bounds) + _arrowCenterOffset;
-    CGPoint p0 = CGPointMake(arrowX, CGRectGetMaxY(self.bounds));
-    [arrowPath moveToPoint:p0];
-    [arrowPath addLineToPoint:CGPointMake(MAX(arrowX - 8.0, 0), CGRectGetMaxY(roundedRect)-4)];
-    [arrowPath addLineToPoint:CGPointMake(MIN(arrowX + 8.0, maxX), CGRectGetMaxY(roundedRect)-4)];
+    [arrowPath moveToPoint:tip];
+    [arrowPath addLineToPoint:CGPointMake(MAX(arrowTipX - x, 0), CGRectGetMaxY(roundedRect) - arrowLength)];
+    [arrowPath addLineToPoint:CGPointMake(MIN(arrowTipX + x, maxX), CGRectGetMaxY(roundedRect) - arrowLength)];
     [arrowPath closePath];
     
     // combine arrow path and rounded rect

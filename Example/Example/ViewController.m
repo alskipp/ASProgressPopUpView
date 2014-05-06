@@ -26,6 +26,8 @@
     self.progressView1.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:26];
     self.progressView1.popUpViewAnimatedColors = @[[UIColor redColor], [UIColor orangeColor], [UIColor greenColor]];
     self.progressView1.dataSource = self;
+    
+    self.progressView2.popUpViewCornerRadius = 12.0;
 }
 
 #pragma mark - IBActions
