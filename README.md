@@ -20,7 +20,7 @@ Features
   * font
   * popUpViewColor
   * popUpViewAnimatedColors - popUpView and progress bar color animate as value changes
-  * cornerRadius
+  * popUpViewCornerRadius
 * Optional dataSource - supply your own custom text to the popUpView label
 * Wholesome springy animation
 
