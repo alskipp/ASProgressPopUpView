@@ -34,11 +34,13 @@
 
 - (void)setAnimatedColors:(NSArray *)animatedColors withKeyTimes:(NSArray *)keyTimes;
 
+// sets the specified view properties immediately without animation
 - (void)setFrame:(CGRect)frame
      arrowOffset:(CGFloat)arrowOffset
            label:(NSString *)label
  animationOffset:(CGFloat)animOffset;
 
+// animates the specified view properties from current state to new state with the given duration
 - (void)setFrame:(CGRect)frame
      arrowOffset:(CGFloat)arrowOffset
            label:(NSString *)label

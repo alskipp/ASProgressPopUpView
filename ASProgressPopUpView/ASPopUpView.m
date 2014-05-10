@@ -26,9 +26,12 @@ NSString *const FillColorAnimation = @"fillColor";
     NSMutableAttributedString *_attributedString;
     CAShapeLayer *_backgroundLayer;
     CATextLayer *_textLayer;
-    CAShapeLayer *_colorAnimLayer;
     CGSize _oldSize;
     CGFloat _arrowCenterOffset;
+    
+    // never actually visible, its purpose is to interpolate color values for the popUpView color animation
+    // using shape layer because it has a 'fillColor' property which is consistent with _backgroundLayer
+    CAShapeLayer *_colorAnimLayer;
 }
 
 #pragma mark - public
@@ -76,7 +79,7 @@ NSString *const FillColorAnimation = @"fillColor";
 - (void)setColor:(UIColor *)color
 {
     _backgroundLayer.fillColor = color.CGColor;
-    [_colorAnimLayer removeAnimationForKey:FillColorAnimation];
+    [_colorAnimLayer removeAnimationForKey:FillColorAnimation]; // single color, no animation required
 }
 
 - (UIColor *)opaqueColor

@@ -212,6 +212,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     NSString *progressString; // ask dataSource for string, if nil get string from _numberFormatter
     progressString = [self.dataSource progressView:self stringForProgress:progress] ?: [_numberFormatter stringFromNumber:@(progress)];
     
+    // set _popUpViewSize to appropriate size for the progressString if required
     if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
         if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) {
             if ([self.dataSource progressView:self stringForProgress:progress]) {
@@ -222,6 +223,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
         }
     }
     
+    // calculate the popUpView frame
     CGRect bounds = self.bounds;
     CGFloat xPos = (CGRectGetWidth(bounds) * progress) - _popUpViewSize.width/2;
     
@@ -236,6 +238,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     CGFloat offset = minOffsetX < 0.0 ? minOffsetX : (maxOffsetX > 0.0 ? maxOffsetX : 0.0);
     popUpRect.origin.x -= offset;
     
+    // call the block with 'frame', 'arrowOffset', 'popUpLabel' arguments
     popUpViewInfo(CGRectIntegral(popUpRect), offset, progressString);
 }
 
