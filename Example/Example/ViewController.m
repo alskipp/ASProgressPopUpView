@@ -41,7 +41,8 @@
             self.progressView1.progress = 0.0;
             self.progressView2.progress = 0.0;
         }
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.05
+
+        _timer = [NSTimer scheduledTimerWithTimeInterval:0.26
                                                   target:self
                                                 selector:@selector(increaseProgress:)
                                                 userInfo:NULL repeats:YES];
@@ -60,8 +61,11 @@
 
 - (void)increaseProgress:(NSTimer *)timer
 {
-    self.progressView1.progress += 0.01;
-    self.progressView2.progress += 0.01;
+    [self.progressView1 setProgress:self.progressView1.progress + 0.02 animated:YES];
+    [self.progressView2 setProgress:self.progressView2.progress + 0.02 animated:NO];
+
+//    self.progressView1.progress += 0.01;
+//    self.progressView2.progress += 0.01;
     if (self.progressView1.progress >= 1.0) {
         [timer invalidate];
         self.progressButton.selected = NO;

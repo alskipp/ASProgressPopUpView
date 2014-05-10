@@ -26,6 +26,7 @@ NSString *const FillColorAnimation = @"fillColor";
     NSMutableAttributedString *_attributedString;
     CAShapeLayer *_backgroundLayer;
     CATextLayer *_textLayer;
+    CAShapeLayer *_colorAnimLayer;
     CGSize _oldSize;
     CGFloat _arrowCenterOffset;
 }
@@ -49,6 +50,9 @@ NSString *const FillColorAnimation = @"fillColor";
         _textLayer.actions = @{@"bounds" : [NSNull null],   // prevent implicit animation of bounds
                                @"position" : [NSNull null]};// and position
         
+        _colorAnimLayer = [CAShapeLayer layer];
+        
+        [self.layer addSublayer:_colorAnimLayer];
         [self.layer addSublayer:_backgroundLayer];
         [self.layer addSublayer:_textLayer];
         
@@ -61,7 +65,7 @@ NSString *const FillColorAnimation = @"fillColor";
 {
     if (_cornerRadius == radius) return;
     _cornerRadius = radius;
-    [self drawPath];
+    _backgroundLayer.path = [self pathForRect:self.bounds withArrowOffset:_arrowCenterOffset].CGPath;
 }
 
 - (UIColor *)color
@@ -71,8 +75,8 @@ NSString *const FillColorAnimation = @"fillColor";
 
 - (void)setColor:(UIColor *)color
 {
-    [_backgroundLayer removeAnimationForKey:FillColorAnimation];
     _backgroundLayer.fillColor = color.CGColor;
+    [_colorAnimLayer removeAnimationForKey:FillColorAnimation];
 }
 
 - (UIColor *)opaqueColor
@@ -117,20 +121,15 @@ NSString *const FillColorAnimation = @"fillColor";
     colorAnim.delegate = self;
     
     // As the interpolated color values from the presentationLayer are needed immediately
-    // the animation must be allowed to start to initialize _backgroundLayer's presentationLayer
+    // the animation must be allowed to start to initialize _colorAnimLayer's presentationLayer
     // hence the speed is set to min value - then set to zero in 'animationDidStart:' delegate method
-    _backgroundLayer.speed = FLT_MIN;
-    _backgroundLayer.timeOffset = 0.0;
+    _colorAnimLayer.speed = FLT_MIN;
+    _colorAnimLayer.timeOffset = 0.0;
     
-    [_backgroundLayer addAnimation:colorAnim forKey:FillColorAnimation];
+    [_colorAnimLayer addAnimation:colorAnim forKey:FillColorAnimation];
 }
 
-- (void)setAnimationOffset:(CGFloat)offset
-{
-    _backgroundLayer.timeOffset = offset;
-}
-
-- (void)setArrowCenterOffset:(CGFloat)offset
+- (void)setAnchorPointForArrowOffset:(CGFloat)offset
 {
     if (_arrowCenterOffset == offset) return; // only redraw if the offset has changed
     _arrowCenterOffset = offset;
@@ -140,7 +139,63 @@ NSString *const FillColorAnimation = @"fillColor";
     CGRect f = self.layer.frame;
     self.layer.anchorPoint = CGPointMake(0.5+(offset/self.bounds.size.width), 1);
     self.layer.frame = f; // changing anchor repositions layer, so must reset frame afterwards
-    [self drawPath];
+}
+
+- (void)setFrame:(CGRect)frame
+     arrowOffset:(CGFloat)arrowOffset
+           label:(NSString *)label
+ animationOffset:(CGFloat)animOffset;
+{
+    self.frame = frame;
+    [self setAnchorPointForArrowOffset:arrowOffset];
+    _backgroundLayer.path = [self pathForRect:self.bounds withArrowOffset:arrowOffset].CGPath;
+    [self setString:label];
+    
+    _colorAnimLayer.timeOffset = animOffset;
+    if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
+        _backgroundLayer.fillColor = [_colorAnimLayer.presentationLayer fillColor];
+    }
+}
+
+- (void)setFrame:(CGRect)frame
+     arrowOffset:(CGFloat)arrowOffset
+           label:(NSString *)label
+ animationOffset:(CGFloat)animOffset
+        duration:(NSTimeInterval)duration;
+{
+    UIBezierPath *toPath = [self pathForRect:frame withArrowOffset:arrowOffset];
+    _colorAnimLayer.timeOffset = animOffset;
+    CGColorRef toColor = [_colorAnimLayer.presentationLayer fillColor];
+
+    [self setString:label];
+
+    [CATransaction begin]; {
+        [CATransaction setCompletionBlock:^{
+            [self setAnchorPointForArrowOffset:arrowOffset];
+            _backgroundLayer.path = toPath.CGPath;
+            [_backgroundLayer removeAnimationForKey:@"path"];
+        }];
+        [CATransaction setAnimationDuration:duration];
+
+        self.layer.frame = frame;
+
+        // start the path animation from its current value if it's already running
+        id path = [_backgroundLayer animationForKey:@"path"] ? [_backgroundLayer.presentationLayer valueForKey:@"path"] : (id)_backgroundLayer.path;
+
+        CABasicAnimation *pathAnim = [CABasicAnimation animationWithKeyPath:@"path"];
+        pathAnim.fromValue = path;
+        pathAnim.toValue = (__bridge id)toPath.CGPath;
+        pathAnim.removedOnCompletion = NO;
+        pathAnim.fillMode = kCAFillModeForwards;
+        [_backgroundLayer addAnimation:pathAnim forKey:@"path"];
+
+        if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
+            CABasicAnimation *colorAnim = [CABasicAnimation animationWithKeyPath:FillColorAnimation];
+            colorAnim.toValue = (__bridge id)toColor;
+            [_backgroundLayer addAnimation:colorAnim forKey:FillColorAnimation];
+            _backgroundLayer.fillColor = toColor;
+        }
+    } [CATransaction commit];
 }
 
 - (CGSize)popUpSizeForString:(NSString *)string
@@ -209,24 +264,28 @@ NSString *const FillColorAnimation = @"fillColor";
 // the animation can now be updated manually by explicity setting its 'timeOffset'
 - (void)animationDidStart:(CAAnimation *)animation
 {
-    _backgroundLayer.speed = 0.0;
-    _backgroundLayer.timeOffset = [self.delegate currentValueOffset];
-    [self.delegate colorAnimationDidStart];
+    _colorAnimLayer.speed = 0.0;
+    _colorAnimLayer.timeOffset = [self.delegate currentValueOffset];
+    
+    _backgroundLayer.fillColor = [_colorAnimLayer.presentationLayer fillColor];
+    [self.delegate colorDidUpdate];
 }
 
 #pragma mark - private
 
-- (void)drawPath
+- (UIBezierPath *)pathForRect:(CGRect)rect withArrowOffset:(CGFloat)arrowOffset;
 {
+    rect = (CGRect){CGPointZero, rect.size}; // ensure origin is CGPointZero
+
     // Create rounded rect
-    CGRect roundedRect = self.bounds;
+    CGRect roundedRect = rect;
     roundedRect.size.height -= ARROW_LENGTH;
-    UIBezierPath *roundedRectPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:_cornerRadius];
+    UIBezierPath *popUpPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:_cornerRadius];
     
     // Create arrow path
     CGFloat maxX = CGRectGetMaxX(roundedRect); // prevent arrow from extending beyond this point
-    CGFloat arrowTipX = CGRectGetMidX(self.bounds) + _arrowCenterOffset;
-    CGPoint tip = CGPointMake(arrowTipX, CGRectGetMaxY(self.bounds));
+    CGFloat arrowTipX = CGRectGetMidX(rect) + arrowOffset;
+    CGPoint tip = CGPointMake(arrowTipX, CGRectGetMaxY(rect));
     
     CGFloat arrowLength = CGRectGetHeight(roundedRect)/2.0;
     CGFloat x = arrowLength * tan(45.0 * M_PI/180); // x = half the length of the base of the arrow
@@ -237,10 +296,9 @@ NSString *const FillColorAnimation = @"fillColor";
     [arrowPath addLineToPoint:CGPointMake(MIN(arrowTipX + x, maxX), CGRectGetMaxY(roundedRect) - arrowLength)];
     [arrowPath closePath];
     
-    // combine arrow path and rounded rect
-    [roundedRectPath appendPath:arrowPath];
+    [popUpPath appendPath:arrowPath];
     
-    _backgroundLayer.path = roundedRectPath.CGPath;
+    return popUpPath;
 }
 
 - (void)layoutSubviews
@@ -257,7 +315,8 @@ NSString *const FillColorAnimation = @"fillColor";
                                  (self.bounds.size.height-ARROW_LENGTH-textHeight)/2,
                                  self.bounds.size.width, textHeight);
     _textLayer.frame = CGRectIntegral(textRect);
-    [self drawPath];
+    
+    _backgroundLayer.path = [self pathForRect:self.bounds withArrowOffset:_arrowCenterOffset].CGPath;
 }
 
 static UIColor* opaqueUIColorFromCGColor(CGColorRef col)
@@ -271,6 +330,5 @@ static UIColor* opaqueUIColorFromCGColor(CGColorRef col)
     }
     return color;
 }
-
 
 @end

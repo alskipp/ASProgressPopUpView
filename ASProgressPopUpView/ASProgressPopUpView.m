@@ -144,7 +144,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 #pragma mark - ASPopUpViewDelegate
 
-- (void)colorAnimationDidStart;
+- (void)colorDidUpdate;
 {
     [self autoColorTrack];
 }
@@ -196,12 +196,25 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)positionAndUpdatePopUpView
 {
-    NSString *progressString; // ask dataSource for string, if nil get string from _numberFormatter
-    progressString = [self.dataSource progressView:self stringForProgress:self.progress] ?: [_numberFormatter stringFromNumber:@(self.progress)];
+    [self popUpViewProgress:self.progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpLabel) {
+        [self.popUpView setFrame:frame
+                     arrowOffset:arrowOffset
+                           label:popUpLabel
+                 animationOffset:self.progress];
+    }];
+    
+    [self autoColorTrack];
+}
 
+- (void)popUpViewProgress:(float)progress
+            popUpViewInfo:(void (^)(CGRect frame, CGFloat arrowOffset, NSString *popUpLabel))popUpViewInfo
+{
+    NSString *progressString; // ask dataSource for string, if nil get string from _numberFormatter
+    progressString = [self.dataSource progressView:self stringForProgress:progress] ?: [_numberFormatter stringFromNumber:@(progress)];
+    
     if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
         if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) {
-            if ([self.dataSource progressView:self stringForProgress:self.progress]) {
+            if ([self.dataSource progressView:self stringForProgress:progress]) {
                 _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
             } else {
                 _popUpViewSize = _defaultPopUpViewSize;
@@ -209,31 +222,21 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
         }
     }
     
-    [self.popUpView setString:progressString];
-    [self adjustPopUpViewFrame];
-    [self.popUpView setAnimationOffset:[self currentValueOffset]];
+    CGRect bounds = self.bounds;
+    CGFloat xPos = (CGRectGetWidth(bounds) * progress) - _popUpViewSize.width/2;
     
-    [self autoColorTrack];
-}
-
-- (void)adjustPopUpViewFrame
-{
-    CGRect progressRect = self.bounds;
-    CGFloat xPos = (CGRectGetWidth(progressRect) * self.progress) - _popUpViewSize.width/2;
-    
-    CGRect popUpRect = CGRectMake(xPos, CGRectGetMinY(progressRect)-_popUpViewSize.height,
+    CGRect popUpRect = CGRectMake(xPos, CGRectGetMinY(bounds)-_popUpViewSize.height,
                                   _popUpViewSize.width, _popUpViewSize.height);
-
+    
     // determine if popUpRect extends beyond the frame of the progress view
     // if so adjust frame and set the center offset of the PopUpView's arrow
     CGFloat minOffsetX = CGRectGetMinX(popUpRect);
-    CGFloat maxOffsetX = CGRectGetMaxX(popUpRect) - self.bounds.size.width;
+    CGFloat maxOffsetX = CGRectGetMaxX(popUpRect) - CGRectGetWidth(bounds);
     
     CGFloat offset = minOffsetX < 0.0 ? minOffsetX : (maxOffsetX > 0.0 ? maxOffsetX : 0.0);
     popUpRect.origin.x -= offset;
     
-    self.popUpView.frame = CGRectIntegral(popUpRect);
-    [self.popUpView setArrowCenterOffset:offset];
+    popUpViewInfo(CGRectIntegral(popUpRect), offset, progressString);
 }
 
 - (void)autoColorTrack
@@ -283,7 +286,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)hidePopUpView
 {
-    [self positionAndUpdatePopUpView];
     [self.popUpView hide];
     _popUpViewIsVisible = NO;
 }
@@ -331,6 +333,32 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     self.autoAdjustTrackColor = NO; // if a custom value is set then prevent auto coloring
     [super setProgressTintColor:color];
+}
+
+- (void)setProgress:(float)progress animated:(BOOL)animated
+{
+    if (animated == NO) { // set progress without animation and return early
+        self.progress = progress;
+        return;
+    }
+    
+    progress = MAX(0, MIN(progress, 1.0)); // ensure progress is in the range 0.0 - 1.0
+    
+    if (!_popUpViewIsVisible) [self showPopUpView];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        [self popUpViewProgress:progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpLabel) {
+            [self.popUpView setFrame:frame
+                         arrowOffset:arrowOffset
+                               label:popUpLabel
+                     animationOffset:progress
+                            duration:0.25];
+        }];
+        [super setProgress:progress animated:animated];
+    } completion:^(BOOL finished) {
+        [self autoColorTrack];
+        if (progress >=1.0 && !_alwaysShowPopUpView) [self hidePopUpView];
+    }];
 }
 
 #pragma mark - KVO

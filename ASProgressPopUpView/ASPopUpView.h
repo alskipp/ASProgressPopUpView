@@ -15,7 +15,7 @@
 
 @protocol ASPopUpViewDelegate <NSObject>
 - (CGFloat)currentValueOffset; //expects value in the range 0.0 - 1.0
-- (void)colorAnimationDidStart;
+- (void)colorDidUpdate;
 - (void)popUpViewDidHide;
 @end
 
@@ -34,8 +34,16 @@
 
 - (void)setAnimatedColors:(NSArray *)animatedColors withKeyTimes:(NSArray *)keyTimes;
 
-- (void)setAnimationOffset:(CGFloat)offset;
-- (void)setArrowCenterOffset:(CGFloat)offset;
+- (void)setFrame:(CGRect)frame
+     arrowOffset:(CGFloat)arrowOffset
+           label:(NSString *)label
+ animationOffset:(CGFloat)animOffset;
+
+- (void)setFrame:(CGRect)frame
+     arrowOffset:(CGFloat)arrowOffset
+           label:(NSString *)label
+ animationOffset:(CGFloat)animOffset
+        duration:(NSTimeInterval)duration;
 
 - (CGSize)popUpSizeForString:(NSString *)string;
 
