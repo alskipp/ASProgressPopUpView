@@ -101,7 +101,7 @@ NSString *const FillColorAnimation = @"fillColor";
                                   range:NSMakeRange(0, [_attributedString length])];
 }
 
-- (void)setString:(NSString *)string
+- (void)setText:(NSString *)string
 {
     [[_attributedString mutableString] setString:string];
     _textLayer.string = _attributedString;
@@ -146,13 +146,13 @@ NSString *const FillColorAnimation = @"fillColor";
 
 - (void)setFrame:(CGRect)frame
      arrowOffset:(CGFloat)arrowOffset
-           label:(NSString *)label
+            text:(NSString *)text
  animationOffset:(CGFloat)animOffset;
 {
     self.frame = frame;
     [self setAnchorPointForArrowOffset:arrowOffset];
     _backgroundLayer.path = [self pathForRect:self.bounds withArrowOffset:arrowOffset].CGPath;
-    [self setString:label];
+    [self setText:text];
     
     _colorAnimLayer.timeOffset = animOffset;
     if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
@@ -162,7 +162,7 @@ NSString *const FillColorAnimation = @"fillColor";
 
 - (void)setFrame:(CGRect)frame
      arrowOffset:(CGFloat)arrowOffset
-           label:(NSString *)label
+            text:(NSString *)text
  animationOffset:(CGFloat)animOffset
         duration:(NSTimeInterval)duration;
 {
@@ -170,7 +170,7 @@ NSString *const FillColorAnimation = @"fillColor";
     _colorAnimLayer.timeOffset = animOffset;
     CGColorRef toColor = [_colorAnimLayer.presentationLayer fillColor];
 
-    [self setString:label];
+    [self setText:text];
 
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{

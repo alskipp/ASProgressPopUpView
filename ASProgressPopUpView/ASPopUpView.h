@@ -30,20 +30,20 @@
 
 - (void)setTextColor:(UIColor *)textColor;
 - (void)setFont:(UIFont *)font;
-- (void)setString:(NSString *)string;
+- (void)setText:(NSString *)text;
 
 - (void)setAnimatedColors:(NSArray *)animatedColors withKeyTimes:(NSArray *)keyTimes;
 
 // sets the specified view properties immediately without animation
 - (void)setFrame:(CGRect)frame
      arrowOffset:(CGFloat)arrowOffset
-           label:(NSString *)label
+           text:(NSString *)text
  animationOffset:(CGFloat)animOffset;
 
 // animates the specified view properties from current state to new state with the given duration
 - (void)setFrame:(CGRect)frame
      arrowOffset:(CGFloat)arrowOffset
-           label:(NSString *)label
+           text:(NSString *)text
  animationOffset:(CGFloat)animOffset
         duration:(NSTimeInterval)duration;
 

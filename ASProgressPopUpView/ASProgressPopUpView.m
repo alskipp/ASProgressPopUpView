@@ -196,10 +196,10 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)positionAndUpdatePopUpView
 {
-    [self popUpViewProgress:self.progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpLabel) {
+    [self popUpViewProgress:self.progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
         [self.popUpView setFrame:frame
                      arrowOffset:arrowOffset
-                           label:popUpLabel
+                           text:popUpText
                  animationOffset:self.progress];
     }];
     
@@ -207,7 +207,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 }
 
 - (void)popUpViewProgress:(float)progress
-            popUpViewInfo:(void (^)(CGRect frame, CGFloat arrowOffset, NSString *popUpLabel))popUpViewInfo
+            popUpViewInfo:(void (^)(CGRect frame, CGFloat arrowOffset, NSString *popUpText))popUpViewInfo
 {
     NSString *progressString; // ask dataSource for string, if nil get string from _numberFormatter
     progressString = [self.dataSource progressView:self stringForProgress:progress] ?: [_numberFormatter stringFromNumber:@(progress)];
@@ -350,10 +350,10 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     if (!_popUpViewIsVisible) [self showPopUpView];
     
     [UIView animateWithDuration:0.25 animations:^{
-        [self popUpViewProgress:progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpLabel) {
+        [self popUpViewProgress:progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
             [self.popUpView setFrame:frame
                          arrowOffset:arrowOffset
-                               label:popUpLabel
+                               text:popUpText
                      animationOffset:progress
                             duration:0.25];
         }];
