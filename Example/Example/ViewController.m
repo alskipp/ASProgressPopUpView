@@ -53,8 +53,8 @@
 
 - (IBAction)toggleShowHide:(UISwitch *)sender
 {
-    self.progressView1.alwaysShowPopUpView = sender.on ?: NO;
-    self.progressView2.alwaysShowPopUpView = sender.on ?: NO;
+    self.progressView1.alwaysShowPopUpView = sender.on;
+    self.progressView2.alwaysShowPopUpView = sender.on;
 }
 
 #pragma mark - Timer
