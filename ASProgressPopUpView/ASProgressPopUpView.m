@@ -382,7 +382,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
         }
         
     } else if (context == ASProgressViewBoundsContext) {
-        if (_popUpViewIsVisible) [self positionAndUpdatePopUpView];
+        [self positionAndUpdatePopUpView];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
