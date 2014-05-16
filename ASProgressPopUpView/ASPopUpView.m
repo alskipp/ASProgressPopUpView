@@ -280,6 +280,8 @@ NSString *const FillColorAnimation = @"fillColor";
 
 - (UIBezierPath *)pathForRect:(CGRect)rect withArrowOffset:(CGFloat)arrowOffset;
 {
+    if (CGRectEqualToRect(rect, CGRectZero)) return nil;
+    
     rect = (CGRect){CGPointZero, rect.size}; // ensure origin is CGPointZero
 
     // Create rounded rect
