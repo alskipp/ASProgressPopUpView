@@ -184,8 +184,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
     self.textColor = [UIColor whiteColor];
     self.font = [UIFont boldSystemFontOfSize:24.0f];
-    
-    [self positionAndUpdatePopUpView];
 }
 
 // ensure animation restarts if app is closed then becomes active again
@@ -297,7 +295,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 - (void)addObserversAndNotifications
 {
     [self addObserver:self forKeyPath:@"progress"
-              options:NSKeyValueObservingOptionNew
+              options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
               context:ASProgressPopUpViewContext];
     
     [self addObserver:self forKeyPath:@"bounds"
