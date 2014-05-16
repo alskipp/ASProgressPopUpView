@@ -184,6 +184,8 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
     self.textColor = [UIColor whiteColor];
     self.font = [UIFont boldSystemFontOfSize:24.0f];
+    
+    [self positionAndUpdatePopUpView];
 }
 
 // ensure animation restarts if app is closed then becomes active again
@@ -282,7 +284,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 - (void)showPopUpView
 {
     [self.delegate progressViewWillDisplayPopUpView:self];
-    [self positionAndUpdatePopUpView];
     [self.popUpView show];
     _popUpViewIsVisible = YES;
 }
@@ -349,18 +350,19 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     
     if (!_popUpViewIsVisible) [self showPopUpView];
     
-    [UIView animateWithDuration:0.25 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         [self popUpViewProgress:progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
-            [self.popUpView setFrame:frame
-                         arrowOffset:arrowOffset
-                               text:popUpText
-                     animationOffset:progress
-                            duration:0.25];
+            [self.popUpView animateFrame:frame
+                             arrowOffset:arrowOffset
+                                    text:popUpText
+                         animationOffset:progress
+                                duration:0.5
+                              completion:^{
+                                  [self autoColorTrack];
+                                  if (progress >=1.0 && !_alwaysShowPopUpView) [self hidePopUpView];
+                              }];
         }];
         [super setProgress:progress animated:animated];
-    } completion:^(BOOL finished) {
-        [self autoColorTrack];
-        if (progress >=1.0 && !_alwaysShowPopUpView) [self hidePopUpView];
     }];
 }
 
@@ -370,12 +372,13 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     if (context == ASProgressPopUpViewContext) {
         
+        [self positionAndUpdatePopUpView];
+
         if (!_popUpViewIsVisible && self.progress > 0.0) {
             [self showPopUpView];
-        } else if (self.progress >= 1.0 && _alwaysShowPopUpView == NO) {
-            [self hidePopUpView];
-        } else {
-            [self positionAndUpdatePopUpView];
+        } else if (self.progress >= 1.0 || self.progress <= 0.0) {
+            [self autoColorTrack];
+            if (_alwaysShowPopUpView == NO) [self hidePopUpView];
         }
         
     } else if (context == ASProgressViewBoundsContext) {

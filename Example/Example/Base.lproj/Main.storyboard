@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qof-vx-ZGw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="qof-vx-ZGw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -54,6 +54,16 @@
                                 <rect key="frame" x="20" y="241" width="280" height="2"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yiM-O4-22u">
+                                <rect key="frame" x="140" y="300" width="40" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Reset">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="reset:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="MOK-ol-qKH"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -61,6 +71,7 @@
                             <constraint firstItem="OQG-Fv-W5X" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="15" id="BCu-6Z-Td9"/>
                             <constraint firstItem="U7h-Xm-xUE" firstAttribute="top" secondItem="piG-nv-qSd" secondAttribute="bottom" constant="8" symbolic="YES" id="DhM-SG-38J"/>
                             <constraint firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" constant="20" symbolic="YES" id="Egr-tT-4yy"/>
+                            <constraint firstItem="yiM-O4-22u" firstAttribute="centerX" secondItem="U7h-Xm-xUE" secondAttribute="centerX" id="M8h-h5-RbD"/>
                             <constraint firstItem="OQG-Fv-W5X" firstAttribute="centerY" secondItem="B7U-Uk-p6a" secondAttribute="centerY" id="Q3h-ys-DG8"/>
                             <constraint firstItem="piG-nv-qSd" firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" id="Rv6-S6-QTL"/>
                             <constraint firstItem="OQG-Fv-W5X" firstAttribute="trailing" secondItem="cLB-8R-yUn" secondAttribute="trailing" id="cAN-t7-7Kg"/>
@@ -68,14 +79,30 @@
                             <constraint firstItem="cLB-8R-yUn" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="110" id="i7l-WY-700"/>
                             <constraint firstAttribute="centerX" secondItem="U7h-Xm-xUE" secondAttribute="centerX" id="khq-oF-Vvg"/>
                             <constraint firstItem="piG-nv-qSd" firstAttribute="top" secondItem="cLB-8R-yUn" secondAttribute="bottom" constant="65" id="mWV-m7-dqn"/>
+                            <constraint firstItem="yiM-O4-22u" firstAttribute="top" secondItem="U7h-Xm-xUE" secondAttribute="bottom" constant="8" symbolic="YES" id="nvQ-Su-UKI"/>
                             <constraint firstItem="B7U-Uk-p6a" firstAttribute="leading" secondItem="cLB-8R-yUn" secondAttribute="leading" id="v7p-Ci-EAd"/>
                             <constraint firstItem="B7U-Uk-p6a" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="w1s-F8-WtV"/>
                             <constraint firstItem="cLB-8R-yUn" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" symbolic="YES" id="xyU-eg-0Zo"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="spt-FX-27g"/>
+                    <navigationItem key="navigationItem" id="spt-FX-27g">
+                        <nil key="title"/>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="hH6-pu-1sD">
+                            <rect key="frame" x="96" y="6" width="128" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="Discrete">
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <state key="selected" title="Continuous"/>
+                            <connections>
+                                <action selector="toggleContinuousProgress:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="YHO-at-zpT"/>
+                            </connections>
+                        </button>
+                    </navigationItem>
                     <connections>
+                        <outlet property="continuousButton" destination="hH6-pu-1sD" id="UkH-FX-FTv"/>
                         <outlet property="progressButton" destination="U7h-Xm-xUE" id="kUI-HY-3t4"/>
                         <outlet property="progressView1" destination="cLB-8R-yUn" id="Ris-EF-tZw"/>
                         <outlet property="progressView2" destination="piG-nv-qSd" id="tAi-pz-hcU"/>

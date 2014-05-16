@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView1;
 @property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView2;
 @property (weak, nonatomic) IBOutlet UIButton *progressButton;
+@property (weak, nonatomic) IBOutlet UIButton *continuousButton;
 @end
 
 @implementation ViewController
@@ -32,43 +33,54 @@
 
 #pragma mark - IBActions
 
-- (IBAction)startProgress:(UIButton *)sender
-{
-    sender.selected = !sender.selected;
-    
-    if (sender.selected) {
-        if (self.progressView1.progress >= 1.0) {
-            self.progressView1.progress = 0.0;
-            self.progressView2.progress = 0.0;
-        }
-
-        _timer = [NSTimer scheduledTimerWithTimeInterval:0.26
-                                                  target:self
-                                                selector:@selector(increaseProgress:)
-                                                userInfo:NULL repeats:YES];
-    } else {
-        [_timer invalidate];
-    }
-}
-
 - (IBAction)toggleShowHide:(UISwitch *)sender
 {
     self.progressView1.alwaysShowPopUpView = sender.on;
     self.progressView2.alwaysShowPopUpView = sender.on;
 }
 
+- (IBAction)toggleContinuousProgress:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+}
+
+- (IBAction)reset:(id)sender
+{
+    self.progressButton.selected = NO;
+    self.progressButton.enabled = YES;
+    
+    self.progressView1.progress = 0.0;
+    self.progressView2.progress = 0.0;
+}
+
+- (IBAction)startProgress:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+    [self progress];
+}
+
 #pragma mark - Timer
 
-- (void)increaseProgress:(NSTimer *)timer
+- (void)progress
 {
-    [self.progressView1 setProgress:self.progressView1.progress + 0.02 animated:YES];
-    [self.progressView2 setProgress:self.progressView2.progress + 0.02 animated:NO];
-
-//    self.progressView1.progress += 0.01;
-//    self.progressView2.progress += 0.01;
     if (self.progressView1.progress >= 1.0) {
-        [timer invalidate];
         self.progressButton.selected = NO;
+        self.progressButton.enabled = NO;
+    }
+
+    float progress = self.progressView1.progress;
+    if (self.progressButton.selected && progress < 1.0) {
+        
+        progress += _continuousButton.selected ? 0.01 : 0.1;
+
+        [self.progressView1 setProgress:progress animated:!_continuousButton.selected];
+        [self.progressView2 setProgress:progress animated:!_continuousButton.selected];
+        
+        [NSTimer scheduledTimerWithTimeInterval:_continuousButton.selected ? 0.05 : 0.5
+                                         target:self
+                                       selector:@selector(progress)
+                                       userInfo:nil
+                                        repeats:NO];
     }
 }
 

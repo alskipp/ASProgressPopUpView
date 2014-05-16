@@ -41,11 +41,12 @@
  animationOffset:(CGFloat)animOffset;
 
 // animates the specified view properties from current state to new state with the given duration
-- (void)setFrame:(CGRect)frame
-     arrowOffset:(CGFloat)arrowOffset
-           text:(NSString *)text
- animationOffset:(CGFloat)animOffset
-        duration:(NSTimeInterval)duration;
+- (void)animateFrame:(CGRect)frame
+         arrowOffset:(CGFloat)arrowOffset
+                text:(NSString *)text
+     animationOffset:(CGFloat)animOffset
+            duration:(NSTimeInterval)duration
+          completion:(void (^)(void))completion;
 
 - (CGSize)popUpSizeForString:(NSString *)string;
 
