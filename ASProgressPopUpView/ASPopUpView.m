@@ -324,6 +324,8 @@ NSString *const FillColorAnimation = @"fillColor";
 
 static UIColor* opaqueUIColorFromCGColor(CGColorRef col)
 {
+    if (col == NULL) return nil;
+    
     const CGFloat *components = CGColorGetComponents(col);
     UIColor *color;
     if (CGColorGetNumberOfComponents(col) == 2) {
