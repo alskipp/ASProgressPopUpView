@@ -14,11 +14,12 @@
 
 @implementation CALayer (ASAnimationAdditions)
 
-- (void)animateKey:(NSString *)animationName toValue:(id)toValue customize:(void (^)(CABasicAnimation *animation))block
+- (void)animateKey:(NSString *)animationName fromValue:(id)fromValue toValue:(id)toValue
+         customize:(void (^)(CABasicAnimation *animation))block
 {
     [self setValue:toValue forKey:animationName];
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:animationName];
-    anim.fromValue = [self.presentationLayer valueForKey:animationName];
+    anim.fromValue = fromValue ?: [self.presentationLayer valueForKey:animationName];
     anim.toValue = toValue;
     if (block) block(anim);
     [self addAnimation:anim forKey:animationName];
@@ -26,7 +27,7 @@
 
 - (void)animateKey:(NSString *)animationName toValue:(id)toValue
 {
-    [self animateKey:animationName toValue:toValue customize:nil];
+    [self animateKey:animationName fromValue:nil toValue:toValue customize:nil];
 }
 
 @end
@@ -203,7 +204,6 @@ NSString *const FillColorAnimation = @"fillColor";
         [_backgroundLayer animateKey:@"path"
                              toValue:(__bridge id)[self pathForRect:frame withArrowOffset:arrowOffset].CGPath];
         
-        
         if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
             _colorAnimLayer.timeOffset = animOffset;
             [_backgroundLayer animateKey:@"fillColor"
@@ -224,18 +224,16 @@ NSString *const FillColorAnimation = @"fillColor";
 - (void)show
 {
     [CATransaction begin]; {
-        // start the transform animation from its current value if it's already running
+        // start the transform animation from scale 0.5, or its current value if it's already running
         NSValue *fromValue = [self.layer animationForKey:@"transform"] ? [self.layer.presentationLayer valueForKey:@"transform"] : [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.5, 0.5, 1)];
         
-        CABasicAnimation *scaleAnim = [CABasicAnimation animationWithKeyPath:@"transform"];
-        scaleAnim.fromValue = fromValue;
-        scaleAnim.toValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
-        [scaleAnim setTimingFunction:[CAMediaTimingFunction functionWithControlPoints:0.8 :2.5 :0.35 :0.5]];
-        scaleAnim.duration = 0.8;
-        self.layer.transform = CATransform3DIdentity;
-        [self.layer addAnimation:scaleAnim forKey:@"transform"];
+        [self.layer animateKey:@"transform" fromValue:fromValue toValue:[NSValue valueWithCATransform3D:CATransform3DIdentity]
+                     customize:^(CABasicAnimation *animation) {
+                         animation.duration = 0.8;
+                         animation.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.8 :2.5 :0.35 :0.5];
+         }];
         
-        [self.layer animateKey:@"opacity" toValue:@1.0 customize:^(CABasicAnimation *animation) {
+        [self.layer animateKey:@"opacity" fromValue:nil toValue:@1.0 customize:^(CABasicAnimation *animation) {
             animation.duration = 0.1;
         }];
         
@@ -246,17 +244,15 @@ NSString *const FillColorAnimation = @"fillColor";
 {
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{ [self.delegate popUpViewDidHide]; }];
+
+        [self.layer animateKey:@"transform" fromValue:nil
+                       toValue:[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.5, 0.5, 1)]
+                     customize:^(CABasicAnimation *animation) {
+                         animation.duration = 0.9;
+                         animation.timingFunction = [CAMediaTimingFunction functionWithControlPoints:0.1 :-2 :0.3 :3];
+         }];
         
-        CABasicAnimation *scaleAnim = [CABasicAnimation animationWithKeyPath:@"transform"];
-        scaleAnim.fromValue = [self.layer.presentationLayer valueForKey:@"transform"];
-        scaleAnim.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.5, 0.5, 1)];
-        scaleAnim.duration = 0.9;
-        scaleAnim.removedOnCompletion = NO;
-        scaleAnim.fillMode = kCAFillModeForwards;
-        [scaleAnim setTimingFunction:[CAMediaTimingFunction functionWithControlPoints:0.1 :-2 :0.3 :3]];
-        [self.layer addAnimation:scaleAnim forKey:@"transform"];
-        
-        [self.layer animateKey:@"opacity" toValue:@0.0 customize:^(CABasicAnimation *animation) {
+        [self.layer animateKey:@"opacity" fromValue:nil toValue:@0.0 customize:^(CABasicAnimation *animation) {
             animation.duration = 1.0;
         }];
         
