@@ -375,7 +375,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
         if (!_popUpViewIsVisible && self.progress > 0.0) {
             [self showPopUpView];
         } else if (self.progress >= 1.0 || self.progress <= 0.0) {
-            [self autoColorTrack];
             if (_alwaysShowPopUpView == NO) [self hidePopUpView];
         }
         
