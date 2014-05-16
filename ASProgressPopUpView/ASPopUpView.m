@@ -11,6 +11,27 @@
 // The public API is declared in ASProgressPopUpView.h
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+
+@implementation CALayer (ASAnimationAdditions)
+
+- (void)animateKey:(NSString *)animationName toValue:(id)toValue customize:(void (^)(CABasicAnimation *animation))block
+{
+    [self setValue:toValue forKey:animationName];
+    CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:animationName];
+    anim.fromValue = [self.presentationLayer valueForKey:animationName];
+    anim.toValue = toValue;
+    if (block) block(anim);
+    [self addAnimation:anim forKey:animationName];
+}
+
+- (void)animateKey:(NSString *)animationName toValue:(id)toValue
+{
+    [self animateKey:animationName toValue:toValue customize:nil];
+}
+
+@end
+
+
 #import "ASPopUpView.h"
 
 const float ARROW_LENGTH = 13.0;
@@ -168,53 +189,25 @@ NSString *const FillColorAnimation = @"fillColor";
         
         [self setText:text];
 
-        
         CGFloat anchorX = 0.5+(arrowOffset/CGRectGetWidth(frame));
-        CGPoint toAnchorPoint = CGPointMake(anchorX, 1);
-        self.layer.anchorPoint = toAnchorPoint;
-
-        CABasicAnimation *ancAnim = [CABasicAnimation animationWithKeyPath:@"anchorPoint"];
-        ancAnim.fromValue = [NSValue valueWithCGPoint:[self.layer.presentationLayer anchorPoint]];
-        ancAnim.toValue = [NSValue valueWithCGPoint:toAnchorPoint];
-        [self.layer addAnimation:ancAnim forKey:ancAnim.keyPath];
-
+        [self.layer animateKey:@"anchorPoint"
+                       toValue:[NSValue valueWithCGPoint:CGPointMake(anchorX, 1)]];
         
         CGPoint toPosition = CGPointMake(CGRectGetMinX(frame) + CGRectGetWidth(frame)*anchorX, 0);
-        self.layer.position = toPosition;
-
-        CABasicAnimation *posAnim = [CABasicAnimation animationWithKeyPath:@"position"];
-        posAnim.fromValue = [NSValue valueWithCGPoint:[self.layer.presentationLayer position]];
-        posAnim.toValue = [NSValue valueWithCGPoint:toPosition];
-        [self.layer addAnimation:posAnim forKey:posAnim.keyPath];
-
+        [self.layer animateKey:@"position"
+                       toValue:[NSValue valueWithCGPoint:toPosition]];
         
-        self.layer.bounds = (CGRect){CGPointZero, frame.size};
+        [self.layer animateKey:@"bounds"
+                       toValue:[NSValue valueWithCGRect:(CGRect){CGPointZero, frame.size}]];
         
-        CABasicAnimation *boundsAnim = [CABasicAnimation animationWithKeyPath:@"bounds"];
-        boundsAnim.fromValue = [NSValue valueWithCGRect:[self.layer.presentationLayer bounds]];
-        boundsAnim.toValue = [NSValue valueWithCGRect:(CGRect){CGPointZero, frame.size}];
-        [self.layer addAnimation:boundsAnim forKey:boundsAnim.keyPath];
-
+        [_backgroundLayer animateKey:@"path"
+                             toValue:(__bridge id)[self pathForRect:frame withArrowOffset:arrowOffset].CGPath];
         
-        // start the path animation from its current value if it's already running
-        CGPathRef fromPath = [_backgroundLayer animationForKey:@"path"] ? [_backgroundLayer.presentationLayer path] : _backgroundLayer.path;
-        UIBezierPath *toPath = [self pathForRect:frame withArrowOffset:arrowOffset];
-
-        _backgroundLayer.path = toPath.CGPath;
-        CABasicAnimation *pathAnim = [CABasicAnimation animationWithKeyPath:@"path"];
-        pathAnim.fromValue = (__bridge id)fromPath;
-        pathAnim.toValue = (__bridge id)toPath.CGPath;
-        [_backgroundLayer addAnimation:pathAnim forKey:pathAnim.keyPath];
-
+        
         if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
             _colorAnimLayer.timeOffset = animOffset;
-            CGColorRef toColor = [_colorAnimLayer.presentationLayer fillColor];
-            _backgroundLayer.fillColor = toColor;
-            
-            CABasicAnimation *colorAnim = [CABasicAnimation animationWithKeyPath:FillColorAnimation];
-            colorAnim.fromValue = (__bridge id)[_backgroundLayer.presentationLayer fillColor];
-            colorAnim.toValue = (__bridge id)toColor;
-            [_backgroundLayer addAnimation:colorAnim forKey:colorAnim.keyPath];
+            [_backgroundLayer animateKey:@"fillColor"
+                                 toValue:(__bridge id)[_colorAnimLayer.presentationLayer fillColor]];
         }
     } [CATransaction commit];
 }
@@ -242,13 +235,10 @@ NSString *const FillColorAnimation = @"fillColor";
         self.layer.transform = CATransform3DIdentity;
         [self.layer addAnimation:scaleAnim forKey:@"transform"];
         
-        CABasicAnimation* fadeInAnim = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        fadeInAnim.fromValue = [self.layer.presentationLayer valueForKey:@"opacity"];
-        fadeInAnim.duration = 0.1;
-        fadeInAnim.toValue = @1.0;
-        [self.layer addAnimation:fadeInAnim forKey:@"opacity"];
+        [self.layer animateKey:@"opacity" toValue:@1.0 customize:^(CABasicAnimation *animation) {
+            animation.duration = 0.1;
+        }];
         
-        self.layer.opacity = 1.0;
     } [CATransaction commit];
 }
 
@@ -266,12 +256,10 @@ NSString *const FillColorAnimation = @"fillColor";
         [scaleAnim setTimingFunction:[CAMediaTimingFunction functionWithControlPoints:0.1 :-2 :0.3 :3]];
         [self.layer addAnimation:scaleAnim forKey:@"transform"];
         
-        CABasicAnimation* fadeOutAnim = [CABasicAnimation animationWithKeyPath:@"opacity"];
-        fadeOutAnim.fromValue = [self.layer.presentationLayer valueForKey:@"opacity"];
-        fadeOutAnim.toValue = @0.0;
-        fadeOutAnim.duration = 1.0;
-        [self.layer addAnimation:fadeOutAnim forKey:@"opacity"];
-        self.layer.opacity = 0.0;
+        [self.layer animateKey:@"opacity" toValue:@0.0 customize:^(CABasicAnimation *animation) {
+            animation.duration = 1.0;
+        }];
+        
     } [CATransaction commit];
 }
 
