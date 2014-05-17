@@ -178,37 +178,36 @@ NSString *const FillColorAnimation = @"fillColor";
                 text:(NSString *)text
      animationOffset:(CGFloat)animOffset
             duration:(NSTimeInterval)duration
-          completion:(void (^)(void))completion
+          completion:(void (^)(UIColor *endColor))completion
 {
     [CATransaction begin]; {
+        UIColor *toColor;
+        if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
+            _colorAnimLayer.timeOffset = animOffset;
+            toColor = [UIColor colorWithCGColor:[_colorAnimLayer.presentationLayer fillColor]];
+        }
+        
         [CATransaction setCompletionBlock:^{
-            if (completion) completion();
+            if (completion) completion(toColor);
         }];
         
         [CATransaction setAnimationDuration:duration];
         [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
         
+        if (toColor) [_backgroundLayer animateKey:@"fillColor" toValue:(__bridge id)toColor.CGColor];
+        
         [self setText:text];
 
         CGFloat anchorX = 0.5+(arrowOffset/CGRectGetWidth(frame));
-        [self.layer animateKey:@"anchorPoint"
-                       toValue:[NSValue valueWithCGPoint:CGPointMake(anchorX, 1)]];
+        [self.layer animateKey:@"anchorPoint" toValue:[NSValue valueWithCGPoint:CGPointMake(anchorX, 1)]];
         
         CGPoint toPosition = CGPointMake(CGRectGetMinX(frame) + CGRectGetWidth(frame)*anchorX, 0);
-        [self.layer animateKey:@"position"
-                       toValue:[NSValue valueWithCGPoint:toPosition]];
+        [self.layer animateKey:@"position" toValue:[NSValue valueWithCGPoint:toPosition]];
         
-        [self.layer animateKey:@"bounds"
-                       toValue:[NSValue valueWithCGRect:(CGRect){CGPointZero, frame.size}]];
+        [self.layer animateKey:@"bounds" toValue:[NSValue valueWithCGRect:(CGRect){CGPointZero, frame.size}]];
         
         [_backgroundLayer animateKey:@"path"
                              toValue:(__bridge id)[self pathForRect:frame withArrowOffset:arrowOffset].CGPath];
-        
-        if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
-            _colorAnimLayer.timeOffset = animOffset;
-            [_backgroundLayer animateKey:@"fillColor"
-                                 toValue:(__bridge id)[_colorAnimLayer.presentationLayer fillColor]];
-        }
     } [CATransaction commit];
 }
 

@@ -46,7 +46,7 @@
                 text:(NSString *)text
      animationOffset:(CGFloat)animOffset
             duration:(NSTimeInterval)duration
-          completion:(void (^)(void))completion;
+          completion:(void (^)(UIColor *endColor))completion;
 
 - (CGSize)popUpSizeForString:(NSString *)string;
 

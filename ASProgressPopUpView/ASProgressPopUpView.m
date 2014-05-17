@@ -355,8 +355,8 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
                                     text:popUpText
                          animationOffset:progress
                                 duration:0.5
-                              completion:^{
-                                  [self autoColorTrack];
+                              completion:^(UIColor *endColor) {
+                                  if (endColor) super.progressTintColor = endColor;
                                   if (progress >=1.0 && !_alwaysShowPopUpView) [self hidePopUpView];
                               }];
         }];
