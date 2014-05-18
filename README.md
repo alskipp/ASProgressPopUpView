@@ -48,9 +48,11 @@ self.progressView.popUpViewAnimatedColors = @[[UIColor redColor], [UIColor orang
 self.progressView.popUpViewCornerRadius = 16.0;
 ```
 
-You update the value exactly as you would normally use a UIProgressView, just update the ‘progress’ property `self.progressView.progress = 0.31;`.
+You update the value exactly as you would normally use a UIProgressView, just update the `progress` property `self.progressView.progress = 0.31;`.
 
 ![screenshot] (http://alskipp.github.io/ASProgressPopUpView/img/screenshot2.png)
+
+With `version 0.7.1` and above, the animated progress method is supported `- (void)setProgress:(float)progress animated:(BOOL)animated`. When updating the progress in increments `> 0.05` the results will be much smoother using the animated form.
 
 
 ###How to use custom strings in popUpView label
