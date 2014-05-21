@@ -54,8 +54,8 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     
     _autoAdjustTrackColor = autoAdjust;
     
-    // setMinimumTrackTintColor has been overridden to also set autoAdjustTrackColor to NO
-    // therefore super's implementation must be called to set minimumTrackTintColor
+    // setProgressTintColor has been overridden to also set autoAdjustTrackColor to NO
+    // therefore super's implementation must be called to set progressTintColor
     if (autoAdjust == NO) {
         super.progressTintColor = nil; // sets track to default blue color
     } else {
