@@ -211,7 +211,8 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     NSString *progressString; // ask dataSource for string, if nil get string from _numberFormatter
     progressString = [self.dataSource progressView:self stringForProgress:progress] ?: [_numberFormatter stringFromNumber:@(progress)];
-    
+    if (progressString.length == 0) progressString = @"???"; // replacement for blank string
+
     // set _popUpViewSize to appropriate size for the progressString if required
     if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
         if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) {
