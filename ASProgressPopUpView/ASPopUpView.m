@@ -35,7 +35,7 @@
 
 #import "ASPopUpView.h"
 
-const float ARROW_LENGTH = 13.0;
+const float ARROW_LENGTH = 8.0;
 const float POPUPVIEW_WIDTH_PAD = 1.15;
 const float POPUPVIEW_HEIGHT_PAD = 1.1;
 
