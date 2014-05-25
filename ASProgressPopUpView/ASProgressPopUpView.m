@@ -48,6 +48,23 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 #pragma mark - public
 
+- (void)showPopUpViewAnimated:(BOOL)animated
+{
+    if (_popUpViewIsVisible) return;
+    
+    [self.delegate progressViewWillDisplayPopUpView:self];
+    [self.popUpView showAnimated:animated];
+    _popUpViewIsVisible = YES;
+}
+
+- (void)hidePopUpViewAnimated:(BOOL)animated
+{
+    if (!_popUpViewIsVisible) return;
+    
+    [self.popUpView hideAnimated:animated];
+    _popUpViewIsVisible = NO;
+}
+
 - (void)setAutoAdjustTrackColor:(BOOL)autoAdjust
 {
     if (_autoAdjustTrackColor == autoAdjust) return;
@@ -126,16 +143,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     [self.popUpView setCornerRadius:popUpViewCornerRadius];
 }
 
-- (void)setAlwaysShowPopUpView:(BOOL)show
-{
-    _alwaysShowPopUpView = show;
-    if (show && !_popUpViewIsVisible) {
-        [self showPopUpView];
-    } else if (!show && _popUpViewIsVisible && (self.progress == 0.0 || self.progress >= 1.0)) {
-        [self hidePopUpView];
-    }
-}
-
 - (void)setDataSource:(id<ASProgressPopUpViewDataSource>)dataSource
 {
     _dataSource = dataSource;;
@@ -168,7 +175,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 {
     _autoAdjustTrackColor = YES;
     _popUpViewIsVisible = NO;
-    _alwaysShowPopUpView = NO;
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterPercentStyle];
@@ -280,19 +286,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     _popUpViewSize = (width > 0.0 && height > 0.0) ? CGSizeMake(width, height) : _defaultPopUpViewSize;
 }
 
-- (void)showPopUpView
-{
-    [self.delegate progressViewWillDisplayPopUpView:self];
-    [self.popUpView show];
-    _popUpViewIsVisible = YES;
-}
-
-- (void)hidePopUpView
-{
-    [self.popUpView hide];
-    _popUpViewIsVisible = NO;
-}
-
 - (void)addObserversAndNotifications
 {
     [self addObserver:self forKeyPath:@"progress"
@@ -347,8 +340,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     
     progress = MAX(0, MIN(progress, 1.0)); // ensure progress is in the range 0.0 - 1.0
     
-    if (!_popUpViewIsVisible) [self showPopUpView];
-    
     [UIView animateWithDuration:0.5 animations:^{
         [self popUpViewProgress:progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
             [self.popUpView animateFrame:frame
@@ -358,7 +349,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
                                 duration:0.5
                               completion:^(UIColor *endColor) {
                                   if (endColor) super.progressTintColor = endColor;
-                                  if (progress >=1.0 && !_alwaysShowPopUpView) [self hidePopUpView];
                               }];
         }];
         [super setProgress:progress animated:animated];
@@ -370,14 +360,7 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (context == ASProgressPopUpViewContext) {
-        
         [self positionAndUpdatePopUpView];
-
-        if (!_popUpViewIsVisible && self.progress > 0.0) {
-            [self showPopUpView];
-        } else if (self.progress >= 1.0 || self.progress <= 0.0) {
-            if (_alwaysShowPopUpView == NO) [self hidePopUpView];
-        }
         
     } else if (context == ASProgressViewBoundsContext) {
         [self positionAndUpdatePopUpView];

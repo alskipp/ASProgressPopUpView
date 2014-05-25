@@ -50,7 +50,7 @@
 
 - (CGSize)popUpSizeForString:(NSString *)string;
 
-- (void)show;
-- (void)hide;
+- (void)showAnimated:(BOOL)animated;
+- (void)hideAnimated:(BOOL)animated;
 
 @end

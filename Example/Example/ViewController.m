@@ -36,8 +36,13 @@
 
 - (IBAction)toggleShowHide:(UISwitch *)sender
 {
-    self.progressView1.alwaysShowPopUpView = sender.on;
-    self.progressView2.alwaysShowPopUpView = sender.on;
+    if (sender.on) {
+        [self.progressView1 showPopUpViewAnimated:YES];
+        [self.progressView2 showPopUpViewAnimated:YES];
+    } else {
+        [self.progressView1 hidePopUpViewAnimated:YES];
+        [self.progressView2 hidePopUpViewAnimated:YES];
+    }
 }
 
 - (IBAction)toggleContinuousProgress:(UIButton *)sender

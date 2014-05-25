@@ -218,8 +218,13 @@ NSString *const FillColorAnimation = @"fillColor";
     return CGSizeMake(w, h);
 }
 
-- (void)show
+- (void)showAnimated:(BOOL)animated
 {
+    if (!animated) {
+        self.layer.opacity = 1.0;
+        return;
+    }
+    
     [CATransaction begin]; {
         // start the transform animation from scale 0.5, or its current value if it's already running
         NSValue *fromValue = [self.layer animationForKey:@"transform"] ? [self.layer.presentationLayer valueForKey:@"transform"] : [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.5, 0.5, 1)];
@@ -237,8 +242,13 @@ NSString *const FillColorAnimation = @"fillColor";
     } [CATransaction commit];
 }
 
-- (void)hide
+- (void)hideAnimated:(BOOL)animated
 {
+    if (!animated) {
+        self.layer.opacity = 0.0;
+        return;
+    }
+    
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{ [self.delegate popUpViewDidHide]; }];
 
