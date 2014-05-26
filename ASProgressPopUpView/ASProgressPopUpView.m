@@ -23,7 +23,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     CGSize _popUpViewSize; // usually == _defaultPopUpViewSize, but can vary if dataSource is used
     UIColor *_popUpViewColor;
     NSArray *_keyTimes;
-    BOOL _popUpViewIsVisible;
 }
 
 #pragma mark - initialization
@@ -50,19 +49,17 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 - (void)showPopUpViewAnimated:(BOOL)animated
 {
-    if (_popUpViewIsVisible) return;
+    if (self.popUpView.alpha == 1.0) return;
     
     [self.delegate progressViewWillDisplayPopUpView:self];
     [self.popUpView showAnimated:animated];
-    _popUpViewIsVisible = YES;
 }
 
 - (void)hidePopUpViewAnimated:(BOOL)animated
 {
-    if (!_popUpViewIsVisible) return;
+    if (self.popUpView.alpha == 0.0) return;
     
     [self.popUpView hideAnimated:animated];
-    _popUpViewIsVisible = NO;
 }
 
 - (void)setAutoAdjustTrackColor:(BOOL)autoAdjust
@@ -174,7 +171,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 - (void)setup
 {
     _autoAdjustTrackColor = YES;
-    _popUpViewIsVisible = NO;
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     [formatter setNumberStyle:NSNumberFormatterPercentStyle];
