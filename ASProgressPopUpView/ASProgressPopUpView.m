@@ -9,9 +9,6 @@
 #import "ASPopUpView.h"
 #import "ASProgressPopUpView.h"
 
-static void * ASProgressPopUpViewContext = &ASProgressPopUpViewContext;
-static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
-
 @interface ASProgressPopUpView() <ASPopUpViewDelegate>
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
 @property (strong, nonatomic) ASPopUpView *popUpView;
@@ -148,9 +145,9 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
 
 #pragma mark - ASPopUpViewDelegate
 
-- (void)colorDidUpdate;
+- (void)colorDidUpdate:(UIColor *)opaqueColor;
 {
-    [self autoColorTrack];
+    super.progressTintColor = opaqueColor;
 }
 
 - (void)popUpViewDidHide;
@@ -196,18 +193,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     }
 }
 
-- (void)positionAndUpdatePopUpView
-{
-    [self popUpViewProgress:self.progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
-        [self.popUpView setFrame:frame
-                     arrowOffset:arrowOffset
-                           text:popUpText
-                 animationOffset:self.progress];
-    }];
-    
-    [self autoColorTrack];
-}
-
 - (void)popUpViewProgress:(float)progress
             popUpViewInfo:(void (^)(CGRect frame, CGFloat arrowOffset, NSString *popUpText))popUpViewInfo
 {
@@ -245,13 +230,6 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     popUpViewInfo(CGRectIntegral(popUpRect), offset, progressString);
 }
 
-- (void)autoColorTrack
-{
-    if (_autoAdjustTrackColor == NO || !_popUpViewAnimatedColors) return;
-
-    super.progressTintColor = [self.popUpView opaqueColor];
-}
-
 - (void)calculatePopUpViewSize
 {
     _defaultPopUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];;
@@ -282,39 +260,30 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     _popUpViewSize = (width > 0.0 && height > 0.0) ? CGSizeMake(width, height) : _defaultPopUpViewSize;
 }
 
-- (void)addObserversAndNotifications
-{
-    [self addObserver:self forKeyPath:@"progress"
-              options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial
-              context:ASProgressPopUpViewContext];
-    
-    [self addObserver:self forKeyPath:@"bounds"
-              options:NSKeyValueObservingOptionNew
-              context:ASProgressViewBoundsContext];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didBecomeActiveNotification:)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:nil];
-}
-
-- (void)removeObserversAndNotifications
-{
-    [self removeObserver:self forKeyPath:@"progress"];
-    [self removeObserver:self forKeyPath:@"bounds"];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 #pragma mark - subclassed
+
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [self popUpViewProgress:self.progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
+        [self.popUpView setFrame:frame
+                     arrowOffset:arrowOffset
+                            text:popUpText];
+    }];
+}
 
 - (void)didMoveToWindow
 {
     if (!self.window) { // removed from window - cancel observers and notifications
-        [self removeObserversAndNotifications];
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
     else { // added to window - register observers, notifications and reset animated colors if needed
-        [self addObserversAndNotifications];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didBecomeActiveNotification:)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+        
         if (self.popUpViewAnimatedColors) {
             [self.popUpView setAnimatedColors:_popUpViewAnimatedColors withKeyTimes:_keyTimes];
         }
@@ -327,42 +296,30 @@ static void * ASProgressViewBoundsContext = &ASProgressViewBoundsContext;
     [super setProgressTintColor:color];
 }
 
+- (void)setProgress:(float)progress
+{
+    [super setProgress:progress];
+    
+    [self.popUpView setAnimationOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
+        super.progressTintColor = opaqueReturnColor;
+    }];
+}
+
 - (void)setProgress:(float)progress animated:(BOOL)animated
 {
     if (animated == NO) { // set progress without animation and return early
         self.progress = progress;
         return;
     }
-    
-    progress = MAX(0, MIN(progress, 1.0)); // ensure progress is in the range 0.0 - 1.0
-    
-    [UIView animateWithDuration:0.5 animations:^{
-        [self popUpViewProgress:progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
-            [self.popUpView animateFrame:frame
-                             arrowOffset:arrowOffset
-                                    text:popUpText
-                         animationOffset:progress
-                                duration:0.5
-                              completion:^(UIColor *endColor) {
-                                  if (endColor) super.progressTintColor = endColor;
-                              }];
-        }];
-        [super setProgress:progress animated:animated];
-    }];
-}
 
-#pragma mark - KVO
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if (context == ASProgressPopUpViewContext) {
-        [self positionAndUpdatePopUpView];
+    [self.popUpView animateBlock:^(CFTimeInterval duration) {
+        self.progress = progress;
         
-    } else if (context == ASProgressViewBoundsContext) {
-        [self positionAndUpdatePopUpView];
-    } else {
-        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-    }
+        [UIView animateWithDuration:duration animations:^{
+            [self layoutIfNeeded];
+            [super setProgress:progress animated:animated];
+        }];
+    }];
 }
 
 @end
