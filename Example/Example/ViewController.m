@@ -77,12 +77,12 @@
     float progress = self.progressView1.progress;
     if (self.progressButton.selected && progress < 1.0) {
         
-        progress += _continuousButton.selected ? 0.008 : 0.1;
+        progress += _continuousButton.selected ? 0.005 : 0.1;
 
         [self.progressView1 setProgress:progress animated:!_continuousButton.selected];
         [self.progressView2 setProgress:progress animated:!_continuousButton.selected];
         
-        [NSTimer scheduledTimerWithTimeInterval:_continuousButton.selected ? 0.03 : 0.5
+        [NSTimer scheduledTimerWithTimeInterval:_continuousButton.selected ? 0.05 : 0.5
                                          target:self
                                        selector:@selector(progress)
                                        userInfo:nil
