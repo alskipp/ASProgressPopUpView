@@ -309,9 +309,7 @@ NSString *const FillColorAnimation = @"fillColor";
     [super layoutSubviews];
     
     if (CGSizeEqualToSize(self.bounds.size, _oldSize)) return; // return if view size hasn't changed
-    
     _oldSize = self.bounds.size;
-    _pathLayer.bounds = self.bounds;
     
     CGFloat textHeight = [_attributedString size].height;
     CGRect textRect = CGRectMake(self.bounds.origin.x,
