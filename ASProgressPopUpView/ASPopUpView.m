@@ -42,7 +42,6 @@ NSString *const FillColorAnimation = @"fillColor";
     CAShapeLayer *_pathLayer;
 
     CATextLayer *_textLayer;
-    CGSize _oldSize;
     CGFloat _arrowCenterOffset;
     
     // never actually visible, its purpose is to interpolate color values for the popUpView color animation
@@ -307,9 +306,6 @@ NSString *const FillColorAnimation = @"fillColor";
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    if (CGSizeEqualToSize(self.bounds.size, _oldSize)) return; // return if view size hasn't changed
-    _oldSize = self.bounds.size;
     
     CGFloat textHeight = [_attributedString size].height;
     CGRect textRect = CGRectMake(self.bounds.origin.x,
