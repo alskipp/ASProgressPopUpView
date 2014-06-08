@@ -177,12 +177,17 @@ NSString *const FillColorAnimation = @"fillColor";
 
 - (void)setFrame:(CGRect)frame arrowOffset:(CGFloat)arrowOffset text:(NSString *)text
 {
+    // only redraw path if either the arrowOffset or popUpView size has changed
+    if (arrowOffset != _arrowCenterOffset || !CGSizeEqualToSize(frame.size, self.frame.size)) {
+        _pathLayer.path = [self pathForRect:frame withArrowOffset:arrowOffset].CGPath;
+    }
+    _arrowCenterOffset = arrowOffset;
+
     CGFloat anchorX = 0.5+(arrowOffset/CGRectGetWidth(frame));
     self.layer.anchorPoint = CGPointMake(anchorX, 1);
     self.layer.position = CGPointMake(CGRectGetMinX(frame) + CGRectGetWidth(frame)*anchorX, 0);
     self.layer.bounds = (CGRect){CGPointZero, frame.size};
-
-    _pathLayer.path = [self pathForRect:self.bounds withArrowOffset:arrowOffset].CGPath;
+    
     [self setText:text];
 }
 
