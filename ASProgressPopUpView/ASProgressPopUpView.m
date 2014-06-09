@@ -193,17 +193,16 @@
     }
 }
 
-- (void)popUpViewProgress:(float)progress
-            popUpViewInfo:(void (^)(CGRect frame, CGFloat arrowOffset, NSString *popUpText))popUpViewInfo
+- (void)updatePopUpView
 {
     NSString *progressString; // ask dataSource for string, if nil get string from _numberFormatter
-    progressString = [self.dataSource progressView:self stringForProgress:progress] ?: [_numberFormatter stringFromNumber:@(progress)];
+    progressString = [self.dataSource progressView:self stringForProgress:self.progress] ?: [_numberFormatter stringFromNumber:@(self.progress)];
     if (progressString.length == 0) progressString = @"???"; // replacement for blank string
-
+    
     // set _popUpViewSize to appropriate size for the progressString if required
     if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
         if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) {
-            if ([self.dataSource progressView:self stringForProgress:progress]) {
+            if ([self.dataSource progressView:self stringForProgress:self.progress]) {
                 _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
             } else {
                 _popUpViewSize = _defaultPopUpViewSize;
@@ -213,7 +212,7 @@
     
     // calculate the popUpView frame
     CGRect bounds = self.bounds;
-    CGFloat xPos = (CGRectGetWidth(bounds) * progress) - _popUpViewSize.width/2;
+    CGFloat xPos = (CGRectGetWidth(bounds) * self.progress) - _popUpViewSize.width/2;
     
     CGRect popUpRect = CGRectMake(xPos, CGRectGetMinY(bounds)-_popUpViewSize.height,
                                   _popUpViewSize.width, _popUpViewSize.height);
@@ -226,8 +225,7 @@
     CGFloat offset = minOffsetX < 0.0 ? minOffsetX : (maxOffsetX > 0.0 ? maxOffsetX : 0.0);
     popUpRect.origin.x -= offset;
     
-    // call the block with 'frame', 'arrowOffset', 'popUpLabel' arguments
-    popUpViewInfo(CGRectIntegral(popUpRect), offset, progressString);
+    [self.popUpView setFrame:popUpRect arrowOffset:offset text:progressString];
 }
 
 - (void)calculatePopUpViewSize
@@ -265,12 +263,7 @@
 -(void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    [self popUpViewProgress:self.progress popUpViewInfo:^(CGRect frame, CGFloat arrowOffset, NSString *popUpText) {
-        [self.popUpView setFrame:frame
-                     arrowOffset:arrowOffset
-                            text:popUpText];
-    }];
+    [self updatePopUpView];
 }
 
 - (void)didMoveToWindow
