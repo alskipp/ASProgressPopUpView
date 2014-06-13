@@ -82,9 +82,9 @@ NSString *const FillColorAnimation = @"fillColor";
         _textLayer.anchorPoint = CGPointMake(0, 0);
         _textLayer.contentsScale = [UIScreen mainScreen].scale;
         
-        CABasicAnimation *anim = [CABasicAnimation animation];
-        anim.duration = 0.25;
-        _textLayer.actions = @{@"contents" : anim};
+        CABasicAnimation *defaultTextLayerAnim = [CABasicAnimation animation];
+        defaultTextLayerAnim.duration = 0.25;
+        _textLayer.actions = @{@"contents" : defaultTextLayerAnim};
         
         _colorAnimLayer = [CAShapeLayer layer];
         
