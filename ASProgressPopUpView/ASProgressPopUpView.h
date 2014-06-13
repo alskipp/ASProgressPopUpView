@@ -18,7 +18,7 @@
 @property (strong, nonatomic) UIColor *textColor;
 
 // font can not be nil, it must be a valid UIFont
-// default is ‘boldSystemFontOfSize:24.0’
+// default is ‘boldSystemFontOfSize:20.0’
 @property (strong, nonatomic) UIFont *font;
 
 // setting the value of 'popUpViewColor' overrides 'popUpViewAnimatedColors' and vice versa
