@@ -48,6 +48,18 @@ self.progressView.popUpViewAnimatedColors = @[[UIColor redColor], [UIColor orang
 self.progressView.popUpViewCornerRadius = 16.0;
 ```
 
+To show the popUpView, just call:
+
+```objective-c
+[self.progressView showPopUpViewAnimated:YES];
+```
+
+And to hide:
+
+```objective-c
+[self.progressView hidePopUpViewAnimated:YES];
+```
+
 You update the value exactly as you would normally use a UIProgressView, just update the `progress` property `self.progressView.progress = 0.31;`.
 
 ![screenshot] (http://alskipp.github.io/ASProgressPopUpView/img/screenshot2.png)
