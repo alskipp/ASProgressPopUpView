@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "ASProgressPopUpView"
-  s.version          = "0.7.1"
+  s.version          = "0.8"
   s.summary          = "A progress view showing percentage complete in an animated popUpView"
   s.description      = <<-DESC
                        * Customize: font, font color, background color, corner radius
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/ChromophoreApp'
   
   s.platform         = :ios, '6.0'
-  s.source           = { :git => "https://github.com/alskipp/ASProgressPopUpView.git", :tag => "0.7.1" }
+  s.source           = { :git => "https://github.com/alskipp/ASProgressPopUpView.git", :tag => "0.8" }
   s.source_files     = 'ASProgressPopUpView'
   s.requires_arc     = true
 end
