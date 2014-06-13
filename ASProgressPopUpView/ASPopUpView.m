@@ -53,6 +53,8 @@ NSString *const FillColorAnimation = @"fillColor";
     return [CAShapeLayer class];
 }
 
+// if ivar _shouldAnimate) is YES then return an animation
+// otherwise return NSNull (no animation)
 - (id <CAAction>)actionForLayer:(CALayer *)layer forKey:(NSString *)key
 {
     if (_shouldAnimate) {
@@ -75,7 +77,7 @@ NSString *const FillColorAnimation = @"fillColor";
         self.layer.anchorPoint = CGPointMake(0.5, 1);
         
         self.userInteractionEnabled = NO;
-        _pathLayer = (CAShapeLayer *)self.layer;
+        _pathLayer = (CAShapeLayer *)self.layer; // ivar can now be accessed without casting to CAShapeLayer every time
         
         _textLayer = [CATextLayer layer];
         _textLayer.alignmentMode = kCAAlignmentCenter;
@@ -138,7 +140,6 @@ NSString *const FillColorAnimation = @"fillColor";
 {
     [[_attributedString mutableString] setString:string];
     _textLayer.string = string;
-
 }
 
 // set up an animation, but prevent it from running automatically
@@ -191,13 +192,15 @@ NSString *const FillColorAnimation = @"fillColor";
     [self setText:text];
 }
 
+// _shouldAnimate = YES; causes 'actionForLayer:' to return an animation for layer property changes
+// call the supplied block, then set _shouldAnimate back to NO
 - (void)animateBlock:(void (^)(CFTimeInterval duration))block
 {
     _shouldAnimate = YES;
     _animDuration = 0.5;
     
     CAAnimation *anim = [self.layer animationForKey:@"position"];
-    if ((anim)) {
+    if ((anim)) { // if previous animation hasn't finished reduce the time of new animation
         CFTimeInterval elapsedTime = MIN(CACurrentMediaTime() - anim.beginTime, anim.duration);
         _animDuration = _animDuration * elapsedTime / anim.duration;
     }
