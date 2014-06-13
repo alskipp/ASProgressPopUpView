@@ -200,13 +200,13 @@
     if (progressString.length == 0) progressString = @"???"; // replacement for blank string
     
     // set _popUpViewSize to appropriate size for the progressString if required
-    if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
-        if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) {
-            if ([self.dataSource progressView:self stringForProgress:self.progress]) {
-                _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
-            } else {
-                _popUpViewSize = _defaultPopUpViewSize;
-            }
+    if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)] &&
+        [self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO)
+    {
+        if ([self.dataSource progressView:self stringForProgress:self.progress]) {
+            _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
+        } else {
+            _popUpViewSize = _defaultPopUpViewSize;
         }
     }
     
