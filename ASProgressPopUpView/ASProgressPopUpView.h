@@ -12,10 +12,13 @@
 
 @interface ASProgressPopUpView : UIProgressView
 
+- (void)showPopUpViewAnimated:(BOOL)animated;
+- (void)hidePopUpViewAnimated:(BOOL)animated;
+
 @property (strong, nonatomic) UIColor *textColor;
 
 // font can not be nil, it must be a valid UIFont
-// default is ‘boldSystemFontOfSize:24.0’
+// default is ‘boldSystemFontOfSize:20.0’
 @property (strong, nonatomic) UIFont *font;
 
 // setting the value of 'popUpViewColor' overrides 'popUpViewAnimatedColors' and vice versa
@@ -36,10 +39,6 @@
 // changes the progress track to match current popUpView color
 // the track color alpha is always set to 1.0, even if popUpView color is less than 1.0
 @property (nonatomic) BOOL autoAdjustTrackColor; // (default is YES)
-
-// default behaviour is to show the popupView when progress starts and hide it when it completes
-// if you prefer to always show the popup view then set 'showPopUpViewAtStartAndEnd' to YES
-@property (nonatomic) BOOL alwaysShowPopUpView;  // (default is NO)
 
 // by default the popUpView displays progress from 0% - 100%
 // to display custom text instead, implement the datasource protocol - see below
