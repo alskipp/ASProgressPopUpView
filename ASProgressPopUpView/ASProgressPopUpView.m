@@ -292,7 +292,6 @@
 - (void)setProgress:(float)progress
 {
     [super setProgress:progress];
-    
     [self.popUpView setAnimationOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
         super.progressTintColor = opaqueReturnColor;
     }];
@@ -300,19 +299,19 @@
 
 - (void)setProgress:(float)progress animated:(BOOL)animated
 {
-    if (animated == NO) { // set progress without animation and return early
-        self.progress = progress;
-        return;
-    }
-
-    [self.popUpView animateBlock:^(CFTimeInterval duration) {
-        self.progress = progress;
-        
-        [UIView animateWithDuration:duration animations:^{
-            [self layoutIfNeeded];
-            [super setProgress:progress animated:animated];
+    if (animated) {
+        [self.popUpView animateBlock:^(CFTimeInterval duration) {
+            [UIView animateWithDuration:duration animations:^{
+                [super setProgress:progress animated:animated];
+                [self.popUpView setAnimationOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
+                    super.progressTintColor = opaqueReturnColor;
+                }];
+                [self layoutIfNeeded];
+            }];
         }];
-    }];
+    } else {
+        [super setProgress:progress animated:animated];
+    }
 }
 
 @end
