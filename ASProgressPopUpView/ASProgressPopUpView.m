@@ -56,7 +56,11 @@
 {
     if (self.popUpView.alpha == 0.0) return;
     
-    [self.popUpView hideAnimated:animated];
+    [self.popUpView hideAnimated:animated completionBlock:^{
+        if ([self.delegate respondsToSelector:@selector(progressViewDidHidePopUpView:)]) {
+            [self.delegate progressViewDidHidePopUpView:self];
+        }
+    }];
 }
 
 - (void)setAutoAdjustTrackColor:(BOOL)autoAdjust
@@ -148,13 +152,6 @@
 - (void)colorDidUpdate:(UIColor *)opaqueColor;
 {
     super.progressTintColor = opaqueColor;
-}
-
-- (void)popUpViewDidHide;
-{
-    if ([self.delegate respondsToSelector:@selector(progressViewDidHidePopUpView:)]) {
-        [self.delegate progressViewDidHidePopUpView:self];
-    }
 }
 
 // returns the current progress in the range 0.0 – 1.0
