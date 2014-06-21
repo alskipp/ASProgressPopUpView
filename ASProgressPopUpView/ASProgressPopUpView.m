@@ -105,10 +105,7 @@
     _popUpViewColor = popUpViewColor;
     _popUpViewAnimatedColors = nil; // animated colors should be discarded
     [self.popUpView setColor:popUpViewColor];
-
-    if (_autoAdjustTrackColor) {
-        super.progressTintColor = [self.popUpView opaqueColor];
-    }
+    [self setProgressTintColorIfNeeded:[self.popUpView opaqueColor]];
 }
 
 - (void)setPopUpViewAnimatedColors:(NSArray *)popUpViewAnimatedColors
@@ -151,7 +148,7 @@
 
 - (void)colorDidUpdate:(UIColor *)opaqueColor;
 {
-    super.progressTintColor = opaqueColor;
+    [self setProgressTintColorIfNeeded:opaqueColor];
 }
 
 // returns the current progress in the range 0.0 – 1.0
@@ -255,9 +252,14 @@
     _popUpViewSize = (width > 0.0 && height > 0.0) ? CGSizeMake(width, height) : _defaultPopUpViewSize;
 }
 
+- (void)setProgressTintColorIfNeeded:(UIColor *)color
+{
+    if (_autoAdjustTrackColor) super.progressTintColor = color;
+}
+
 #pragma mark - subclassed
 
--(void)layoutSubviews
+- (void)layoutSubviews
 {
     [super layoutSubviews];
     [self updatePopUpView];
@@ -289,8 +291,8 @@
 - (void)setProgress:(float)progress
 {
     [super setProgress:progress];
-    [self.popUpView setAnimationOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
-        super.progressTintColor = opaqueReturnColor;
+    [self.popUpView animateColorToOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
+        [self setProgressTintColorIfNeeded:opaqueReturnColor];
     }];
 }
 
@@ -300,8 +302,8 @@
         [self.popUpView animateBlock:^(CFTimeInterval duration) {
             [UIView animateWithDuration:duration animations:^{
                 [super setProgress:progress animated:animated];
-                [self.popUpView setAnimationOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
-                    super.progressTintColor = opaqueReturnColor;
+                [self.popUpView animateColorToOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
+                    [self setProgressTintColorIfNeeded:opaqueReturnColor];
                 }];
                 [self layoutIfNeeded];
             }];

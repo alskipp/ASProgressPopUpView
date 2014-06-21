@@ -167,7 +167,7 @@ NSString *const FillColorAnimation = @"fillColor";
     [_colorAnimLayer addAnimation:colorAnim forKey:FillColorAnimation];
 }
 
-- (void)setAnimationOffset:(CGFloat)animOffset returnColor:(void (^)(UIColor *opaqueReturnColor))block
+- (void)animateColorToOffset:(CGFloat)animOffset returnColor:(void (^)(UIColor *opaqueReturnColor))block
 {
     if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
         _colorAnimLayer.timeOffset = animOffset;
