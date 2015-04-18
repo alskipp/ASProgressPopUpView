@@ -16,8 +16,6 @@
 
 @implementation ASProgressPopUpView
 {
-    CGSize _defaultPopUpViewSize; // size that fits string ‘100%’
-    CGSize _popUpViewSize; // usually == _defaultPopUpViewSize, but can vary if dataSource is used
     UIColor *_popUpViewColor;
     NSArray *_keyTimes;
 }
@@ -89,8 +87,6 @@
     NSAssert(font, @"font can not be nil, it must be a valid UIFont");
     _font = font;
     [self.popUpView setFont:font];
-
-    [self calculatePopUpViewSize];
 }
 
 // return the currently displayed color if possible, otherwise return _popUpViewColor
@@ -141,7 +137,6 @@
 - (void)setDataSource:(id<ASProgressPopUpViewDataSource>)dataSource
 {
     _dataSource = dataSource;;
-    [self calculatePopUpViewSize];
 }
 
 #pragma mark - ASPopUpViewDelegate
@@ -190,6 +185,7 @@
 - (void)updatePopUpView
 {
     NSString *progressString; // ask dataSource for string, if nil get string from _numberFormatter
+    CGSize popUpViewSize = [self calculatePopUpViewSize];
     progressString = [self.dataSource progressView:self stringForProgress:self.progress] ?: [_numberFormatter stringFromNumber:@(self.progress)];
     if (progressString.length == 0) progressString = @"???"; // replacement for blank string
     
@@ -198,18 +194,16 @@
         [self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO)
     {
         if ([self.dataSource progressView:self stringForProgress:self.progress]) {
-            _popUpViewSize = [self.popUpView popUpSizeForString:progressString];
-        } else {
-            _popUpViewSize = _defaultPopUpViewSize;
+            popUpViewSize = [self.popUpView popUpSizeForString:progressString];
         }
     }
     
     // calculate the popUpView frame
     CGRect bounds = self.bounds;
-    CGFloat xPos = (CGRectGetWidth(bounds) * self.progress) - _popUpViewSize.width/2;
+    CGFloat xPos = (CGRectGetWidth(bounds) * self.progress) - popUpViewSize.width/2;
     
-    CGRect popUpRect = CGRectMake(xPos, CGRectGetMinY(bounds)-_popUpViewSize.height,
-                                  _popUpViewSize.width, _popUpViewSize.height);
+    CGRect popUpRect = CGRectMake(xPos, CGRectGetMinY(bounds)-popUpViewSize.height,
+                                  popUpViewSize.width, popUpViewSize.height);
     
     // determine if popUpRect extends beyond the frame of the progress view
     // if so adjust frame and set the center offset of the PopUpView's arrow
@@ -222,19 +216,16 @@
     [self.popUpView setFrame:popUpRect arrowOffset:offset text:progressString];
 }
 
-- (void)calculatePopUpViewSize
+- (CGSize)calculatePopUpViewSize
 {
-    _defaultPopUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];;
-
-    // if there isn't a dataSource, set _popUpViewSize to _defaultPopUpViewSize
-    if (!self.dataSource) {
-        _popUpViewSize = _defaultPopUpViewSize;
-        return;
-    }
-    
-    // if dataSource doesn't want popUpView size precalculated then return early from method
-    if ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)]) {
-        if ([self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO) return;
+    CGSize defaultPopUpViewSize = [self.popUpView popUpSizeForString:[_numberFormatter stringFromNumber:@1.0]];
+                                   
+    // if there isn't a dataSource, or if dataSource doesn't want popUpView size precalculated
+    // return size based on max value @1.0
+    if ( !self.dataSource ||
+        ([self.dataSource respondsToSelector:@selector(progressViewShouldPreCalculatePopUpViewSize:)] &&
+         [self.dataSource progressViewShouldPreCalculatePopUpViewSize:self] == NO)) {
+        return defaultPopUpViewSize;
     }
     
     // calculate the largest popUpView size needed to keep the size consistent
@@ -249,7 +240,7 @@
             if (size.height > height) height = size.height;
         }
     }
-    _popUpViewSize = (width > 0.0 && height > 0.0) ? CGSizeMake(width, height) : _defaultPopUpViewSize;
+    return (width > 0.0 && height > 0.0) ? CGSizeMake(width, height) : defaultPopUpViewSize;
 }
 
 - (void)setProgressTintColorIfNeeded:(UIColor *)color
