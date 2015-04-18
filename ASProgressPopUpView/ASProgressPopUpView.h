@@ -40,8 +40,14 @@
 // the track color alpha is always set to 1.0, even if popUpView color is less than 1.0
 @property (nonatomic) BOOL autoAdjustTrackColor; // (default is YES)
 
+// by default the popUpView size will be static and calculated to fit the largest display value
+// to have the size continuously adjust set the property to YES
+// if you set a dataSource the property will automatically be set to YES
+@property (nonatomic) BOOL continuouslyAdjustPopUpViewSize; // (default is NO)
+
 // by default the popUpView displays progress from 0% - 100%
 // to display custom text instead, implement the datasource protocol - see below
+// setting a dataSource automatically sets continuouslyAdjustPopUpViewSize to YES.
 @property (weak, nonatomic) id<ASProgressPopUpViewDataSource> dataSource;
 
 // delegate is only needed when used with a TableView or CollectionView - see below
@@ -54,10 +60,9 @@
 @protocol ASProgressPopUpViewDataSource <NSObject>
 - (NSString *)progressView:(ASProgressPopUpView *)progressView stringForProgress:(float)progress;
 
-@optional
-// by default the popUpView precalculates the largest size required and uses this size to display all values
-// if you'd prefer the popUpView to change size as the text values change then return NO from this method
-- (BOOL)progressViewShouldPreCalculatePopUpViewSize:(ASProgressPopUpView *)progressView;
+// required to calculate the default size for the popUpView
+// must return an Array of all the custom strings which will be displayed
+- (NSArray *)allStringsForProgressView:(ASProgressPopUpView *)progressView;
 @end
 
 

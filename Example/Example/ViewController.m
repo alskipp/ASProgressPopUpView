@@ -109,12 +109,11 @@
     return s;
 }
 
-// by default ASProgressPopUpView precalculates the largest popUpView size needed
-// it then uses this size for all values and maintains a consistent size
-// if you want the popUpView size to adapt as values change then return 'NO'
-- (BOOL)progressViewShouldPreCalculatePopUpViewSize:(ASProgressPopUpView *)progressView;
+// required to calculate the default size for the popUpView
+// simply list all the custom strings that will be displayed
+- (NSArray *)allStringsForProgressView:(ASProgressPopUpView *)progressView;
 {
-    return NO;
+    return @[@"Just starting", @"About halfway", @"Nearly there", @"Complete"];
 }
 
 #pragma mark - Cleanup
