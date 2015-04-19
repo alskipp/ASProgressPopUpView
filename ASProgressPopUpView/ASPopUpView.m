@@ -79,6 +79,8 @@ NSString *const FillColorAnimation = @"fillColor";
         self.userInteractionEnabled = NO;
         _pathLayer = (CAShapeLayer *)self.layer; // ivar can now be accessed without casting to CAShapeLayer every time
         
+        _cornerRadius = 4.0;
+
         _textLayer = [CATextLayer layer];
         _textLayer.alignmentMode = kCAAlignmentCenter;
         _textLayer.anchorPoint = CGPointMake(0, 0);
