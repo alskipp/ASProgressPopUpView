@@ -12,6 +12,7 @@
 @interface ViewController () <ASProgressPopUpViewDataSource>
 @property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView1;
 @property (weak, nonatomic) IBOutlet ASProgressPopUpView *progressView2;
+
 @property (weak, nonatomic) IBOutlet UIButton *progressButton;
 @property (weak, nonatomic) IBOutlet UIButton *continuousButton;
 @end
@@ -30,6 +31,8 @@
     
     self.progressView2.popUpViewCornerRadius = 12.0;
     self.progressView2.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:28];
+    self.progressView2.popUpViewAnimatedColors = @[[UIColor colorWithHue:0.4 saturation:0.4 brightness:0.3 alpha:1.0],
+                                                   [UIColor colorWithHue:0.5 saturation:0.9 brightness:0.8 alpha:1.0]];
 }
 
 #pragma mark - IBActions
@@ -39,6 +42,7 @@
     if (sender.on) {
         [self.progressView1 showPopUpViewAnimated:YES];
         [self.progressView2 showPopUpViewAnimated:YES];
+
     } else {
         [self.progressView1 hidePopUpViewAnimated:YES];
         [self.progressView2 hidePopUpViewAnimated:YES];

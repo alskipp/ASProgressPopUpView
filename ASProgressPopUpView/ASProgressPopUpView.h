@@ -10,10 +10,16 @@
 @protocol ASProgressPopUpViewDelegate;
 @protocol ASProgressPopUpViewDataSource;
 
-@interface ASProgressPopUpView : UIProgressView
+@interface ASProgressPopUpView : UIView
 
 - (void)showPopUpViewAnimated:(BOOL)animated;
 - (void)hidePopUpViewAnimated:(BOOL)animated;
+
+@property(nonatomic) float progress;                        // 0.0 .. 1.0, default is 0.0. values outside are pinned.
+//@property(strong, nonatomic) UIColor* progressTintColor;
+@property(strong, nonatomic) UIColor* trackTintColor;
+
+- (void)setProgress:(float)progress animated:(BOOL)animated;
 
 @property (strong, nonatomic) UIColor *textColor;
 
@@ -36,9 +42,6 @@
 // radius of the popUpView, default is 4.0
 @property (nonatomic) CGFloat popUpViewCornerRadius;
 
-// changes the progress track to match current popUpView color
-// the track color alpha is always set to 1.0, even if popUpView color is less than 1.0
-@property (nonatomic) BOOL autoAdjustTrackColor; // (default is YES)
 
 // by default the popUpView size will be static and calculated to fit the largest display value
 // to have the size continuously adjust set the property to YES

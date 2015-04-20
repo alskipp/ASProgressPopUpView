@@ -18,6 +18,9 @@
 {
     UIColor *_popUpViewColor;
     NSArray *_keyTimes;
+    BOOL _shouldAnimate;
+    CALayer *_progressLayer;
+    CAGradientLayer *_gradientLayer;
 }
 
 #pragma mark - initialization
@@ -61,21 +64,6 @@
     }];
 }
 
-- (void)setAutoAdjustTrackColor:(BOOL)autoAdjust
-{
-    if (_autoAdjustTrackColor == autoAdjust) return;
-    
-    _autoAdjustTrackColor = autoAdjust;
-    
-    // setProgressTintColor has been overridden to also set autoAdjustTrackColor to NO
-    // therefore super's implementation must be called to set progressTintColor
-    if (autoAdjust == NO) {
-        super.progressTintColor = nil; // sets track to default blue color
-    } else {
-        super.progressTintColor = [self.popUpView opaqueColor];
-    }
-}
-
 - (void)setTextColor:(UIColor *)color
 {
     _textColor = color;
@@ -87,6 +75,16 @@
     NSAssert(font, @"font can not be nil, it must be a valid UIFont");
     _font = font;
     [self.popUpView setFont:font];
+}
+
+- (void)setTrackTintColor:(UIColor *)color
+{
+    self.backgroundColor = color;
+}
+
+- (UIColor *)trackTintColor
+{
+    return self.backgroundColor;
 }
 
 // return the currently displayed color if possible, otherwise return _popUpViewColor
@@ -101,7 +99,7 @@
     _popUpViewColor = color;
     _popUpViewAnimatedColors = nil; // animated colors should be discarded
     [self.popUpView setColor:color];
-    [self setProgressTintColorIfNeeded:[self.popUpView opaqueColor]];
+    [self setGradientColors:@[color, color] withPositions:nil];
 }
 
 - (void)setPopUpViewAnimatedColors:(NSArray *)colors
@@ -123,8 +121,10 @@
     
     if ([colors count] >= 2) {
         [self.popUpView setAnimatedColors:colors withKeyTimes:_keyTimes];
+        [self setGradientColors:colors withPositions:positions];
     } else {
-        [self setPopUpViewColor:[colors lastObject] ?: _popUpViewColor];
+        [self setGradientColors:colors withPositions:positions];
+//        [self setPopUpViewColor:[colors lastObject] ?: _popUpViewColor];
     }
 }
 
@@ -144,13 +144,6 @@
     self.continuouslyAdjustPopUpViewSize = YES;
 }
 
-#pragma mark - ASPopUpViewDelegate
-
-- (void)colorDidUpdate:(UIColor *)opaqueColor;
-{
-    [self setProgressTintColorIfNeeded:opaqueColor];
-}
-
 // returns the current progress in the range 0.0 – 1.0
 - (CGFloat)currentValueOffset
 {
@@ -161,7 +154,18 @@
 
 - (void)setup
 {
-    _autoAdjustTrackColor = YES;
+    _progressLayer = [CALayer layer];
+    _progressLayer.masksToBounds = YES;
+    _progressLayer.anchorPoint = CGPointMake(0, 0);
+    [self.layer addSublayer:_progressLayer];
+    
+    _gradientLayer = [CAGradientLayer layer];
+    _gradientLayer.startPoint = CGPointZero;
+    _gradientLayer.endPoint = CGPointMake(1, 0);
+    [_progressLayer addSublayer:_gradientLayer];
+    
+    self.progress = 0;
+    
     _continuouslyAdjustPopUpViewSize = NO;
     
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -212,7 +216,8 @@
     CGFloat offset = minOffsetX < 0.0 ? minOffsetX : (maxOffsetX > 0.0 ? maxOffsetX : 0.0);
     popUpRect.origin.x -= offset;
     
-    [self.popUpView setFrame:popUpRect arrowOffset:offset text:progressString];
+    [self.popUpView setFrame:popUpRect arrowOffset:offset colorOffset:self.progress text:progressString];
+
 }
 
 - (CGSize)calculatePopUpViewSize
@@ -238,18 +243,22 @@
     return (width > defaultPopUpViewSize.width) ? CGSizeMake(width, height) : defaultPopUpViewSize;
 }
 
-- (void)setProgressTintColorIfNeeded:(UIColor *)color
-{
-    if (_autoAdjustTrackColor) super.progressTintColor = color;
-}
-
 #pragma mark - subclassed
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
+    [self updateProgressLayer];
     [self updatePopUpView];
 }
+
+- (void)updateProgressLayer
+{
+    _gradientLayer.frame = self.bounds;
+    _progressLayer.frame = CGRectMake(0, 0, self.bounds.size.width * self.progress, self.bounds.size.height);
+}
+
 
 - (void)didMoveToWindow
 {
@@ -268,35 +277,54 @@
     }
 }
 
-- (void)setProgressTintColor:(UIColor *)color
-{
-    self.autoAdjustTrackColor = NO; // if a custom value is set then prevent auto coloring
-    [super setProgressTintColor:color];
-}
+//- (void)setProgressTintColor:(UIColor *)color
+//{
+//    self.progressLayer.backgroundColor = color.CGColor;
+//}
+//
+//- (UIColor *)progressTintColor
+//{
+//    return [UIColor colorWithCGColor:self.progressLayer.backgroundColor];
+//}
 
 - (void)setProgress:(float)progress
 {
-    [super setProgress:progress];
-    [self.popUpView animateColorToOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
-        [self setProgressTintColorIfNeeded:opaqueReturnColor];
-    }];
+    _progress = MAX(0.0, MIN(progress, 1.0));
+    [self updateProgressLayer];
 }
 
 - (void)setProgress:(float)progress animated:(BOOL)animated
 {
+    _shouldAnimate = animated;
+    
     if (animated) {
         [self.popUpView animateBlock:^(CFTimeInterval duration) {
+            CABasicAnimation *anim = [CABasicAnimation animation];
+            anim.duration = duration;
+            anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+            anim.fromValue = [_progressLayer.presentationLayer valueForKey:@"bounds"];
+            _progressLayer.actions = @{@"bounds" : anim};
+            
             [UIView animateWithDuration:duration animations:^{
-                [super setProgress:progress animated:animated];
-                [self.popUpView animateColorToOffset:progress returnColor:^(UIColor *opaqueReturnColor) {
-                    [self setProgressTintColorIfNeeded:opaqueReturnColor];
-                }];
+                self.progress = progress;
                 [self layoutIfNeeded];
             }];
         }];
     } else {
-        [super setProgress:progress animated:animated];
+        _progressLayer.actions = @{@"bounds" : [NSNull null]};
+        self.progress = progress;
     }
+}
+
+- (void)setGradientColors:(NSArray *)gradientColors withPositions:(NSArray *)positions
+{
+    NSMutableArray *cgColors = [NSMutableArray array];
+    for (UIColor *col in gradientColors) {
+        [cgColors addObject:(id)col.CGColor];
+    }
+    
+    _gradientLayer.colors = cgColors;
+    _gradientLayer.locations = positions;
 }
 
 @end

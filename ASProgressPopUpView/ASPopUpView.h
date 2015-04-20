@@ -15,7 +15,7 @@
 
 @protocol ASPopUpViewDelegate <NSObject>
 - (CGFloat)currentValueOffset; //expects value in the range 0.0 - 1.0
-- (void)colorDidUpdate:(UIColor *)opaqueColor;
+//- (void)colorDidUpdate:(UIColor *)opaqueColor;
 @end
 
 @interface ASPopUpView : UIView
@@ -33,9 +33,9 @@
 
 - (void)setAnimatedColors:(NSArray *)animatedColors withKeyTimes:(NSArray *)keyTimes;
 
-- (void)animateColorToOffset:(CGFloat)animOffset returnColor:(void (^)(UIColor *opaqueReturnColor))block;
+//- (void)animateColorToOffset:(CGFloat)animOffset returnColor:(void (^)(UIColor *opaqueReturnColor))block;
 
-- (void)setFrame:(CGRect)frame arrowOffset:(CGFloat)arrowOffset text:(NSString *)text;
+- (void)setFrame:(CGRect)frame arrowOffset:(CGFloat)arrowOffset colorOffset:(CGFloat)colorOffset text:(NSString *)text;
 
 - (void)animateBlock:(void (^)(CFTimeInterval duration))block;
 

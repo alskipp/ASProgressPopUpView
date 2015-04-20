@@ -85,10 +85,7 @@ NSString *const FillColorAnimation = @"fillColor";
         _textLayer.alignmentMode = kCAAlignmentCenter;
         _textLayer.anchorPoint = CGPointMake(0, 0);
         _textLayer.contentsScale = [UIScreen mainScreen].scale;
-        
-        CABasicAnimation *defaultTextLayerAnim = [CABasicAnimation animation];
-        defaultTextLayerAnim.duration = 0.25;
-        _textLayer.actions = @{@"contents" : defaultTextLayerAnim};
+        _textLayer.actions = @{@"contents" : [NSNull null]};
         
         _colorAnimLayer = [CAShapeLayer layer];
         
@@ -169,29 +166,25 @@ NSString *const FillColorAnimation = @"fillColor";
     [_colorAnimLayer addAnimation:colorAnim forKey:FillColorAnimation];
 }
 
-- (void)animateColorToOffset:(CGFloat)animOffset returnColor:(void (^)(UIColor *opaqueReturnColor))block
-{
-    if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
-        _colorAnimLayer.timeOffset = animOffset;
-        _pathLayer.fillColor = [_colorAnimLayer.presentationLayer fillColor];
-        block([self opaqueColor]);
-    }
-}
-
-- (void)setFrame:(CGRect)frame arrowOffset:(CGFloat)arrowOffset text:(NSString *)text
+- (void)setFrame:(CGRect)frame arrowOffset:(CGFloat)arrowOffset colorOffset:(CGFloat)colorOffset text:(NSString *)text
 {
     // only redraw path if either the arrowOffset or popUpView size has changed
     if (arrowOffset != _arrowCenterOffset || !CGSizeEqualToSize(frame.size, self.frame.size)) {
         _pathLayer.path = [self pathForRect:frame withArrowOffset:arrowOffset].CGPath;
     }
     _arrowCenterOffset = arrowOffset;
-
+    
     CGFloat anchorX = 0.5+(arrowOffset/CGRectGetWidth(frame));
     self.layer.anchorPoint = CGPointMake(anchorX, 1);
     self.layer.position = CGPointMake(CGRectGetMinX(frame) + CGRectGetWidth(frame)*anchorX, 0);
     self.layer.bounds = (CGRect){CGPointZero, frame.size};
     
     [self setText:text];
+    
+    if ([_colorAnimLayer animationForKey:FillColorAnimation]) {
+        _colorAnimLayer.timeOffset = colorOffset;
+        _pathLayer.fillColor = [_colorAnimLayer.presentationLayer fillColor];
+    }
 }
 
 // _shouldAnimate = YES; causes 'actionForLayer:' to return an animation for layer property changes
@@ -278,7 +271,7 @@ NSString *const FillColorAnimation = @"fillColor";
     _colorAnimLayer.timeOffset = [self.delegate currentValueOffset];
     
     _pathLayer.fillColor = [_colorAnimLayer.presentationLayer fillColor];
-    [self.delegate colorDidUpdate:[self opaqueColor]];
+//    [self.delegate colorDidUpdate:[self opaqueColor]];
 }
 
 #pragma mark - private
