@@ -22,6 +22,9 @@
 
 @property (weak, nonatomic) id <ASPopUpViewDelegate> delegate;
 @property (nonatomic) CGFloat cornerRadius;
+@property (nonatomic) CGFloat arrowLength;
+@property (nonatomic) CGFloat widthPaddingFactor;
+@property (nonatomic) CGFloat heightPaddingFactor;
 
 - (UIColor *)color;
 - (void)setColor:(UIColor *)color;

@@ -30,6 +30,9 @@
     
     self.progressView2.popUpViewCornerRadius = 12.0;
     self.progressView2.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:28];
+
+    [self.progressView1 showPopUpViewAnimated:YES];
+    [self.progressView2 showPopUpViewAnimated:YES];
 }
 
 #pragma mark - IBActions
