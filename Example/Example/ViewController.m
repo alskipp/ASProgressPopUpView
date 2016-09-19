@@ -33,6 +33,9 @@
     self.progressView2.font = [UIFont fontWithName:@"Futura-CondensedExtraBold" size:28];
     self.progressView2.popUpViewAnimatedColors = @[[UIColor colorWithHue:0.4 saturation:0.4 brightness:0.3 alpha:1.0],
                                                    [UIColor colorWithHue:0.5 saturation:0.9 brightness:0.8 alpha:1.0]];
+
+    [self.progressView1 showPopUpViewAnimated:YES];
+    [self.progressView2 showPopUpViewAnimated:YES];
 }
 
 #pragma mark - IBActions

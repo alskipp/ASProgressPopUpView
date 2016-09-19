@@ -27,11 +27,13 @@
 }
 @end
 
-const float ARROW_LENGTH = 8.0;
-const float POPUPVIEW_WIDTH_PAD = 1.15;
-const float POPUPVIEW_HEIGHT_PAD = 1.1;
-
 NSString *const FillColorAnimation = @"fillColor";
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+@interface ASPopUpView () <CAAnimationDelegate>
+@end
+#endif
+
 
 @implementation ASPopUpView
 {
@@ -78,8 +80,11 @@ NSString *const FillColorAnimation = @"fillColor";
         
         self.userInteractionEnabled = NO;
         _pathLayer = (CAShapeLayer *)self.layer; // ivar can now be accessed without casting to CAShapeLayer every time
-        
+
         _cornerRadius = 4.0;
+        _arrowLength = 8.0;
+        _widthPaddingFactor = 1.15;
+        _heightPaddingFactor = 1.1;
 
         _textLayer = [CATextLayer layer];
         _textLayer.alignmentMode = kCAAlignmentCenter;
@@ -208,8 +213,8 @@ NSString *const FillColorAnimation = @"fillColor";
 {
     [[_attributedString mutableString] setString:string];
     CGFloat w, h;
-    w = ceilf([_attributedString size].width * POPUPVIEW_WIDTH_PAD);
-    h = ceilf(([_attributedString size].height * POPUPVIEW_HEIGHT_PAD) + ARROW_LENGTH);
+    w = ceilf([_attributedString size].width * _widthPaddingFactor);
+    h = ceilf(([_attributedString size].height * _heightPaddingFactor) + _arrowLength);
     return CGSizeMake(w, h);
 }
 
@@ -284,7 +289,7 @@ NSString *const FillColorAnimation = @"fillColor";
 
     // Create rounded rect
     CGRect roundedRect = rect;
-    roundedRect.size.height -= ARROW_LENGTH;
+    roundedRect.size.height -= _arrowLength;
     UIBezierPath *popUpPath = [UIBezierPath bezierPathWithRoundedRect:roundedRect cornerRadius:_cornerRadius];
     
     // Create arrow path
@@ -312,7 +317,7 @@ NSString *const FillColorAnimation = @"fillColor";
     
     CGFloat textHeight = [_attributedString size].height;
     CGRect textRect = CGRectMake(self.bounds.origin.x,
-                                 (self.bounds.size.height-ARROW_LENGTH-textHeight)/2,
+                                 (self.bounds.size.height-_arrowLength-textHeight)/2,
                                  self.bounds.size.width, textHeight);
     _textLayer.frame = CGRectIntegral(textRect);
 }
