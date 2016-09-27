@@ -39,7 +39,8 @@ If you don't use CocoaPods, just include these files in your project:
 How to use it
 ---
 
-It’s very simple. Drag a UIProgressView into your Storyboard/nib and set its class to ASProgressPopUpView – that's it.
+It’s very simple. Drag a `UIView` into your Storyboard/nib and set the height and width to the size you need,
+now set its class to `ASProgressPopUpView` – that's it.
 The example below demonstrates how to customize the appearance.
 
 ```objective-c
