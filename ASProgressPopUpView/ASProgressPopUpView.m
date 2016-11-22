@@ -8,6 +8,7 @@
 
 #import "ASPopUpView.h"
 #import "ASProgressPopUpView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface ASProgressPopUpView() <ASPopUpViewDelegate>
 @property (strong, nonatomic) NSNumberFormatter *numberFormatter;
@@ -99,12 +100,24 @@
     _popUpViewColor = color;
     _popUpViewAnimatedColors = nil; // animated colors should be discarded
     [self.popUpView setColor:color];
-    [self setGradientColors:@[color, color] withPositions:nil];
+    [self setGradientColors:@[color, color] withPositions:@[@(0.0), @(1.0)]];
 }
 
 - (void)setPopUpViewAnimatedColors:(NSArray *)colors
 {
-    [self setPopUpViewAnimatedColors:colors withPositions:nil];
+    if ([colors count]==0) {
+        return;
+    } else if ([colors count]==1) {
+        [self setPopUpViewAnimatedColors:@[colors[0], colors[0]] withPositions:@[@(0.0), @(1.0)]];
+    } else {
+        CGFloat spacer = 1.0 / ([colors count]-1);
+        NSMutableArray *positions = [[NSMutableArray alloc] initWithCapacity:[colors count]];
+        for (NSInteger i = 0; i < [colors count]; i++) {
+            [positions addObject:@(i * spacer)];
+        }
+        [positions addObject:@(1.0)];
+        [self setPopUpViewAnimatedColors:colors withPositions:positions];
+    }
 }
 
 // if 2 or more colors are present, set animated colors
@@ -277,15 +290,15 @@
     }
 }
 
-//- (void)setProgressTintColor:(UIColor *)color
-//{
-//    self.progressLayer.backgroundColor = color.CGColor;
-//}
-//
-//- (UIColor *)progressTintColor
-//{
-//    return [UIColor colorWithCGColor:self.progressLayer.backgroundColor];
-//}
+- (void)setProgressTintColor:(UIColor *)color
+{
+    _progressLayer.backgroundColor = color.CGColor;
+}
+
+- (UIColor *)progressTintColor
+{
+    return [UIColor colorWithCGColor:_progressLayer.backgroundColor];
+}
 
 - (void)setProgress:(float)progress
 {

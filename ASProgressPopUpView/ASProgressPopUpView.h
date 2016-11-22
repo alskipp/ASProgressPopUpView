@@ -16,7 +16,7 @@
 - (void)hidePopUpViewAnimated:(BOOL)animated;
 
 @property(nonatomic) float progress;                        // 0.0 .. 1.0, default is 0.0. values outside are pinned.
-//@property(strong, nonatomic) UIColor* progressTintColor;
+@property(strong, nonatomic) UIColor* progressTintColor;
 @property(strong, nonatomic) UIColor* trackTintColor;
 
 - (void)setProgress:(float)progress animated:(BOOL)animated;
