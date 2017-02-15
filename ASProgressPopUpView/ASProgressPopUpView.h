@@ -43,6 +43,10 @@
 @property (nonatomic) CGFloat popUpViewCornerRadius;
 
 
+// radius of the progressLayer, default is 0.0
+@property (nonatomic) CGFloat progressLayerCornerRadius;
+
+
 // by default the popUpView size will be static and calculated to fit the largest display value
 // to have the size continuously adjust set the property to YES
 // if you set a dataSource the property will automatically be set to YES

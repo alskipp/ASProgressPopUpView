@@ -138,6 +138,14 @@
     return self.popUpView.cornerRadius;
 }
 
+- (void)setProgressLayerCornerRadius:(CGFloat)progressLayerCornerRadius {
+    _progressLayer.cornerRadius = progressLayerCornerRadius;
+}
+
+- (CGFloat)progressLayerCornerRadius {
+    return _progressLayer.cornerRadius;
+}
+
 - (void)setDataSource:(id<ASProgressPopUpViewDataSource>)dataSource
 {
     _dataSource = dataSource;
