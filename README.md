@@ -1,7 +1,7 @@
 ASProgressPopUpView
 ========
 
-###What is it?
+### What is it?
 
 
 A UIProgressView subclass that displays the percentage complete in an easy to customize popUpView.
@@ -68,7 +68,7 @@ You update the value exactly as you would normally use a UIProgressView, just up
 With `version 0.7.1` and above, the animated progress method is supported `- (void)setProgress:(float)progress animated:(BOOL)animated`. When updating the progress in increments `> 0.05` the results will be much smoother using the animated form.
 
 
-###How to use custom strings in popUpView label
+### How to use custom strings in popUpView label
 
 Set your controller as the `dataSource` to `ASProgressPopUpView`, then return NSStrings for any progress values you want to customize.
   
@@ -92,7 +92,7 @@ Set your controller as the `dataSource` to `ASProgressPopUpView`, then return NS
 ![screenshot] (http://alskipp.github.io/ASProgressPopUpView/img/screenshot3.png)
 
 
-###How to use with UITableView
+### How to use with UITableView
 
 To use effectively inside a UITableView you need to implement the `<ASProgressPopUpViewDelegate>` protocol. If you just embed an ASProgressPopUpView inside a UITableViewCell the popUpView will probably be obscured by the cell above. The delegate method notifies you before the popUpView appears so that you can ensure that your UITableViewCell is rendered above the others.
 
